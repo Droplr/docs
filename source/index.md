@@ -1,8 +1,7 @@
 ---
-title: API Reference
+title: Droplr API Documentation
 
 language_tabs:
-  - javascript
 
 toc_footers:
 
@@ -15,5 +14,4 @@ search: true
 
 # Introduction
 
-Welcome to the Kittn API! The documentation is split up between [private](#private-operations) and [public](#public-operations) operations.
-
+Welcome to the Droplr API. This documentation is split up between [private](#private-operations) and [public](#public-operations) operations.
