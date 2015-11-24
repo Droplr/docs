@@ -214,13 +214,14 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.DomainAlreadyTaken`
 `x-droplr-errordetails` | `Domain already taken`
 
-#### Notes
-
-* The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed
-to create accounts.
-* Subdomain will be used for teamName.
-* If a subdomain is provided but is in use, an incremental integer will be added as a suffix.
-* If a subdomain is not provided one will be derived from the email domain.
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+    <li>Subdomain will be used for teamName.</li>
+    <li>If a subdomain is provided but is in use, an incremental integer will be added as a suffix.</li>
+    <li>If a subdomain is not provided one will be derived from the email domain.</li>
+  </ul>
+</aside>
 
 
 ### Create Team Member Account
@@ -363,9 +364,11 @@ Header Key | Header Value
 `x-droplr-errorcode` |` CreateAccount.UsernameAlreadyTaken`
 `x-droplr-errordetails` |` That username is already taken`
 
-#### Notes
- * The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed
-to create accounts.
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+  </ul>
+</aside>
 
 
 ### Update a customer_id
@@ -424,9 +427,9 @@ Same input parameters and format as [create account](#create-account) action.
 #### Responses
 Same output parameters and format as [create account](#create-account) action.
 
-#### Notes
-* The authentication used for this action must be session authentication. Only first party web application tier apps can
-perform this action (basically just the website at droplr.com).
-
-* This action creates a new account with the provided details and migrates all the drops from the session - which is
-invalidated - to the new user account.
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).</li>
+    <li>This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.</li>
+  </ul>
+</aside>
