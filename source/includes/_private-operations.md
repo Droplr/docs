@@ -118,9 +118,11 @@ request({
 }
 ```
 
-`POST /account`
+* **Description:** Create an account
+* **URI:** `/account`
+* **Method:** `POST`
 
-**Arguments**
+##### Input Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -135,7 +137,7 @@ request({
 | dropPrivacy | string | PUBLIC or PRIVATE |
 | theme | string | light or dark |
 
-#### Error Responses
+##### Error Responses
 
 ##### Response if email or password are missing
 
@@ -214,14 +216,16 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.DomainAlreadyTaken`
 `x-droplr-errordetails` | `Domain already taken`
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
-    <li>Subdomain will be used for teamName.</li>
-    <li>If a subdomain is provided but is in use, an incremental integer will be added as a suffix.</li>
-    <li>If a subdomain is not provided one will be derived from the email domain.</li>
-  </ul>
-</aside>
+
+##### Notes
+
+* The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.
+
+* Subdomain will be used for teamName.
+
+* If a subdomain is provided but is in use, an incremental integer will be added as a suffix.
+
+* If a subdomain is not provided one will be derived from the email domain.
 
 
 ### Create Team Member Account
@@ -283,9 +287,12 @@ request({
 }
 ```
 
-`POST /teams/:team_id/account`
+* **Description:** Create team member account
+* **URI:** `/teams/:team_id/account`
+* **Method:** `POST`
 
-**Arguments**
+
+##### Input Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -295,7 +302,7 @@ request({
 | lastName | string | The user's last name |
 | username | string | The user's username |
 
-#### Error Responses
+##### Error Responses
 
 ##### Response if email or password are missing
 
@@ -364,14 +371,13 @@ Header Key | Header Value
 `x-droplr-errorcode` |` CreateAccount.UsernameAlreadyTaken`
 `x-droplr-errordetails` |` That username is already taken`
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
-  </ul>
-</aside>
+
+##### Notes
+
+* The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.
 
 
-### Update a customer_id
+### Update a Customer ID
 
 > Example Request
 
@@ -397,15 +403,12 @@ request({
      // Do something with the response
 });
 ```
-> Example Response
 
-```
-  {}
-```
+* **Description:** Create a customer_id
+* **URI:** `/account/customer_id`
+* **Method:** `PUT`
 
-`PUT /account/customer_id`
-
-**Arguments**
+##### Input Parameters
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -414,23 +417,25 @@ request({
 | customerId | string | **Required** The customerId to be set for service |
 
 
-#### Error Responses
+##### Error Responses
 
 
 ### Convert Session to Account
 
-`POST /sessions/convert`
+* **Description:** Create session to account
+* **URI:** `/sessions/convert`
+* **Method:** `POST`
 
-**Arguments**
+##### Input Parameters
 
 Same input parameters and format as [create account](#create-account) action.
 
-#### Responses
+##### Responses
 Same output parameters and format as [create account](#create-account) action.
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).</li>
-    <li>This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.</li>
-  </ul>
-</aside>
+
+##### Notes
+
+* The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).
+
+* This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.
