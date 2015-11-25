@@ -698,5 +698,72 @@ Error Code | Status Code | Cause | Error Message
 
 ##### Notes
 
-* The contents of the `x-droplr-filename` header MUST NOT be URL escaped and MUST be Base64 encoded. Since HTTP headers must be in US ASCII encoding, UTF-8 characters are not supported. Encoding UTF-8 text to Base64 (and then decoding at the server side) ensures that UTF-8 characters are supported as the drop's title.
+* The contents of the `x-droplr-filename` header **MUST NOT** be URL escaped and **MUST** be Base64 encoded. Since HTTP headers must be in US ASCII encoding, UTF-8 characters are not supported. Encoding UTF-8 text to Base64 (and then decoding at the server side) ensures that UTF-8 characters are supported as the drop's title.
 * The filename header is always mandatory, whether the action is executed with JSON or HEADERS data format.
+
+### Read Drop
+
+>Example Request
+
+```
+GET /drops/xkcd HTTP/1.1
+
+```
+
+> Example Response
+
+```
+HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: FILE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-shortlink: http://d.pr/xkcd
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+```
+```json
+{
+  "title":"http://droplr.com",
+  "createdAt":1304642741028,
+  "code":"xkcd",
+  "type":"FILE",
+  "shortlink":"http://d.pr/xkcd",
+  "size":11,
+  "privacy":"PUBLIC",
+  "obscureCode":"xkcdXKCDxkcdXKCD"
+}
+```
+
+* **Description:** Read the contents of a previously created drop
+* **URI:** `/drops/:code`
+* **Method:** `GET`
+* **Supported formats:** HEADERS, JSON
+
+
+##### Input Parameters
+
+The only input parameter is the drop `code` supplied in the URL; e.g. `GET /drops/xkcd`.
+
+
+##### Output Parameters
+
+All output parameters are the same as [upload file](#upload-file) except for `usedSpace` and `totalSpace`, which are not present in the response to this request.
+
+
+##### Errors
+
+Error Code | Status Code | Cause | Error Message
+---------- | ----------- | ----- | ------------- |
+**ReadDrop.NoDrop** | 404 | Request specified a drop code that does not exist. | No such drop
+**ReadDrop.NotOwner** | 403 | Request specified a drop code that is not owned by the user whose credentials were used to sign the request. | You're not the other of that drop
+
+
+##### Notes
+
+* Drops can only be read by their creators. If you request details on a drop not owned by the credentials with which you sign the request, the server will return an unauthorized response.
+
