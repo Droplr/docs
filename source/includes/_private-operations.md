@@ -120,7 +120,7 @@ request({
 
 `POST /account`
 
-#### Arguments
+**Arguments**
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -285,7 +285,7 @@ request({
 
 `POST /teams/:team_id/account`
 
-#### Arguments
+**Arguments**
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -405,7 +405,7 @@ request({
 
 `PUT /account/customer_id`
 
-#### Arguments
+**Arguments**
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -421,7 +421,8 @@ request({
 
 `POST /sessions/convert`
 
-#### Arguments
+**Arguments**
+
 Same input parameters and format as [create account](#create-account) action.
 
 #### Responses
