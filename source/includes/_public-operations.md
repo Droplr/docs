@@ -445,7 +445,7 @@ With any arbitrary language, assuming `Drop` represents a properly parsed drop r
 
 ## Actions
 
-### Shorten link
+### Shorten Link
 
 > Example Request
 
@@ -481,7 +481,8 @@ Content-Length: 211
   "title":"http://droplr.com",
   "usedSpace":11,
   "createdAt":1304642741028,
-  "code":"xkcd","type":"LINK",
+  "code":"xkcd",
+  "type":"LINK",
   "shortlink":"http://d.pr/xkcd",
   "size":11,
   "privacy":"PUBLIC",
@@ -533,3 +534,83 @@ Error Code | Status Code | Cause | Error Message
 
 * The title for the drop generated with this operation will be the original link itself. If the target is a webpage, the title will eventually be updated the the title of the webpage -- assuming there is one.
 * This action does not allow shortening links to Droplr's domains (`droplr.com` and `d.pr`) or its subdomains.
+
+### Create Note
+
+> Example Request
+
+```
+POST /notes HTTP/1.1
+...
+Content-Type: text/plain
+...
+
+POST /notes HTTP/1.1
+...
+Content-Type: text/code
+x-droplr-privacy: PRIVATE
+x-droplr-password: quahog
+...
+```
+
+> Example Response
+
+```
+HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: NOTE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+```
+```json
+{
+  "totalSpace":10000,
+  "title":"http://droplr.com",
+  "usedSpace":11,
+  "createdAt":1304642741028,
+  "code":"xkcd",
+  "type":"NOTE",
+  "shortlink":"http://d.pr/xkcd",
+  "size":11,
+  "privacy":"PUBLIC",
+  "obscureCode":"xkcdXKCDxkcdXKCD"
+}
+```
+
+* **Description:** Create a text based document and a return a short link for it
+* **URI:** `/notes`
+* **Method:** `POST`
+* **Supported formats:** HEADERS, JSON
+* **Variants:** Plain text, Markdown, Textile, Code, etc
+
+##### Input Parameters
+
+Parameter | Description | 
+--------- | ----------- | 
+**Type of note** | The type of note is defined by setting the `Content-Type` header to `text/plain`, `text/markdown`, `text/textile` or `text/code`. As long as the `Content-Type` header is set to a mime type with main type being "text", the drop will be recognized as a note. The mime subtype is merely a hint so that applications viewing this drop can apply text formatting and/or styling (such as code markup or markdown-to-html rendering).
+
+All other input parameters are the same as the [shorten link](#create-link) action.
+
+
+##### Output Parameters
+
+Parameter | Description | Header Key | JSON Field
+--------- | ----------- | ---------- | ---------- |
+**Variant** | The variant is a hint to applications on how to display the drop's content and/or its icon. Beware that this is basically a free-form field and can be set to any value by other applications. | `x-droplr-variant` | `variant`
+
+All other output parameters are the same as the [shorten link](#create-link) action.
+
+
+##### Notes
+
+* The title of the drop will be based on the contents of the note; its first 100 characters with newlines replaced by spaces.
+
