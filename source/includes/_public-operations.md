@@ -150,3 +150,97 @@ Signature generation stages:
 Expected value of `Authorization` header:
 
 `droplr ZmFtaWx5X2FwcDpxdWFnbWlyZUBkcm9wbHIuY29t:zwVsqm6VhEGzFhqBQM+zzvh/PJ8=`
+
+## Data Formats
+
+You'll need to provide an input for many of the operations against the Droplr API servers, and most operations will also return an output.
+
+Two types of output are supported:
+
+* Custom headers (from here on referred to as HEADERS, which are headers with the prefix `x-droplr-*`)
+* JSON
+
+Whenever possible, clients should use the HEADERS output format. It's lighter for both the server and the client because there is no need for encoding/decoding the contents.
+
+While HEADERS format is perfect for conveying data on a single record it is inadequate for large and/or multi-record responses. This means that some actions, given the nature of their responses, are not available with HEADERS format -- as is the case with list operations.
+
+The choice of output format is done by appending a dot (`.`) followed by the desired format at the end of the request URI. For the default, HEADERS format, however, nothing is appended.
+
+Examples:
+
+* `/drops/xkcd.json` (JSON)
+* `/drops/xkcd` (HEADERS)
+
+### Input & Output Coherence
+
+> HEADERS Output Format
+
+```shell
+# Request (partial):
+
+POST /note HTTP/1.1
+...
+(request body)
+
+# Response (partial):
+
+HTTP/1.1 200 OK
+x-droplr-code: xkcd
+x-droplr-uploadsize: 69
+x-droplr-availablespace: 1000
+x-droplr-usedspace: 169
+...
+Content-Length: 0
+```
+
+> JSON Output Format
+
+```shell
+# Request (partial):
+
+POST /note.json HTTP/1.1
+...
+Content-Type: application/json
+Content-Length: 461
+...
+(request body)
+
+# Response:
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 78
+
+{"totalSpace":1073741824,"usedSpace":1400519,"uploadSize":461,"code":"xkcd", ...}
+```
+
+> JSON Output Format with Query Input
+
+```shell
+# Request (partial):
+
+GET /drops.json?offset=0&amount=10 HTTP/1.1
+...
+Content-Length: 0
+
+# Response:
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 78
+
+{"totalSpace":1073741824,"usedSpace":1400519,"uploadSize":461,"code":"xkcd", ...}
+```
+
+When executing an operation, keep in mind that the server will give output according to the input. If you access the operation `GET /drops/xkcd`, the server expects you to provide input using the HEADERS format and will provide output with the HEADERS format. Unless explicitly noted, data format permutations cannot occur; for example, you can't execute `GET /drops/xkcd` with input in HEADERS format and receive data in JSON format.
+
+There are, however, HTTP client libraries that will not allow you to send data along in a GET request. In order to overcome this limitation, all JSON operations that support or require input parameters will also support query parameter input:
+
+`GET /drops.json?offset=0&amount=10 HTTP/1.1`
+
+The following sub-sections illustrate the differences between these output formats for the example of a note upload.
+
+<aside class="notice">
+  Requests in the HEADERS format do not require the format type to be appended at the end of the URI (as is the case with all other formats).
+</aside>
+
