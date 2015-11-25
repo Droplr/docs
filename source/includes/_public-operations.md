@@ -499,8 +499,8 @@ Content-Length: 211
 
 ##### Input Parameters
 
-Parameter | Description | Header Key | Query Field
---------- | ----------- | ---------- | ----------- |
+Parameter | Description | Header Key | Query Parameter
+--------- | ----------- | ---------- | --------------- |
 **Drop privacy** | The privacy with which this drop should be created, overriding default account settings. | `x-droplr-privacy` | `privacy`
 **Drop password** | The password with which this drop should be created, overriding default password generation. | `x-droplr-password` | `password`
 
@@ -598,7 +598,7 @@ Parameter | Description |
 --------- | ----------- | 
 **Type of note** | The type of note is defined by setting the `Content-Type` header to `text/plain`, `text/markdown`, `text/textile` or `text/code`. As long as the `Content-Type` header is set to a mime type with main type being "text", the drop will be recognized as a note. The mime subtype is merely a hint so that applications viewing this drop can apply text formatting and/or styling (such as code markup or markdown-to-html rendering).
 
-All other input parameters are the same as the [shorten link](#create-link) action.
+All other input parameters are the same as the [shorten link](#shorten-link) action.
 
 
 ##### Output Parameters
@@ -607,10 +607,96 @@ Parameter | Description | Header Key | JSON Field
 --------- | ----------- | ---------- | ---------- |
 **Variant** | The variant is a hint to applications on how to display the drop's content and/or its icon. Beware that this is basically a free-form field and can be set to any value by other applications. | `x-droplr-variant` | `variant`
 
-All other output parameters are the same as the [shorten link](#create-link) action.
+All other output parameters are the same as the [shorten link](#shorten-link) action.
 
 
 ##### Notes
 
 * The title of the drop will be based on the contents of the note; its first 100 characters with newlines replaced by spaces.
 
+
+### Upload File
+
+>Example Request
+
+```
+POST /files HTTP/1.1
+...
+x-droplr-filename: QSBmaW5lIG5vdGU=
+...
+
+POST /files HTTP/1.1
+...
+x-droplr-filename: QSBmaW5lIG5vdGU=
+x-droplr-privacy: PRIVATE
+x-droplr-password: wekapaw
+...
+```
+
+> Example Response
+
+```
+HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: FILE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+```
+```json
+{
+  "totalSpace":10000,
+  "title":"http://droplr.com",
+  "usedSpace":11,
+  "createdAt":1304642741028,
+  "code":"xkcd",
+  "type":"FILE",
+  "shortlink":"http://d.pr/xkcd",
+  "size":11,
+  "privacy":"PUBLIC",
+  "obscureCode":"xkcdXKCDxkcdXKCD"
+}
+```
+
+* **Description:** Upload a file and return a short link for its location
+* **URI:** `/files`
+* **Method:** `POST`
+* **Supported formats:** HEADERS, JSON
+* **Variants:** Image, Audio, Video, File
+
+
+##### Input Parameters
+
+Parameter | Description | Header Key | Query Parameter
+--------- | ----------- | ---------- | --------------- |
+**Filename** | The name under which the file should be stored. This property is always mandatory and can either be sent with query params or custom headers (query params take precedence). It must be sent as a query param or a header since the body of the request is reserved for the upload data. | `x-droplr-filename` | `filename`
+
+All other input parameters are the same as the [create note](#create-note) action.
+
+
+##### Output Parameters
+
+All output parameters are the same as the [create note](#create-note) action.
+
+
+##### Errors
+
+Error Code | Status Code | Cause | Error Message
+---------- | ----------- | ----- | ------------- |
+**CreateDrop.RemoteStorageOperationFailed** | 500 | There was an error storing the file's contents. | Error storing drop contents
+**CreateDrop.MissingFilename** | 400 | Request did not bear a `x-droplr-filename` header with the name of the file. | Missing filename; please set query parameter or use custom header
+**CreateDrop.FilenameNotBase64** | 400 | The server could not decode the contents of the header `x-droplr-filename` as Base 64. | Filename header must be base64 encoded
+
+
+##### Notes
+
+* The contents of the `x-droplr-filename` header MUST NOT be URL escaped and MUST be Base64 encoded. Since HTTP headers must be in US ASCII encoding, UTF-8 characters are not supported. Encoding UTF-8 text to Base64 (and then decoding at the server side) ensures that UTF-8 characters are supported as the drop's title.
+* The filename header is always mandatory, whether the action is executed with JSON or HEADERS data format.

@@ -220,11 +220,8 @@ Header Key | Header Value
 ##### Notes
 
 * The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.
-
 * Subdomain will be used for teamName.
-
 * If a subdomain is provided but is in use, an incremental integer will be added as a suffix.
-
 * If a subdomain is not provided one will be derived from the email domain.
 
 
@@ -437,5 +434,4 @@ Same output parameters and format as [create account](#create-account) action.
 ##### Notes
 
 * The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).
-
 * This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.
