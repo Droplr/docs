@@ -490,14 +490,15 @@ Content-Length: 211
 }
 ```
 
-* **Description:** Create a short link to a long link.
-* **URI:** `/links`
-* **Method:** `POST`
-* **Supported formats:** HEADERS, JSON
-* **Variants:** n/a
+
+Create a short link to a long link.
+
+**Supported formats:** HEADERS, JSON
 
 
 ##### Input Parameters
+
+`POST /links`
 
 Parameter | Description | Header Key | Query Parameter
 --------- | ----------- | ---------- | --------------- |
@@ -586,13 +587,16 @@ Content-Length: 211
 }
 ```
 
-* **Description:** Create a text based document and a return a short link for it
-* **URI:** `/notes`
-* **Method:** `POST`
-* **Supported formats:** HEADERS, JSON
-* **Variants:** Plain text, Markdown, Textile, Code, etc
+
+Create a text based document and a return a short link for it
+
+**Supported formats:** HEADERS, JSON
+**Variants:** Plain text, Markdown, Textile, Code, etc
+
 
 ##### Input Parameters
+
+`POST /notes`
 
 Parameter | Description | 
 --------- | ----------- | 
@@ -666,14 +670,16 @@ Content-Length: 211
 }
 ```
 
-* **Description:** Upload a file and return a short link for its location
-* **URI:** `/files`
-* **Method:** `POST`
-* **Supported formats:** HEADERS, JSON
-* **Variants:** Image, Audio, Video, File
+
+Upload a file and return a short link for its location
+
+**Supported formats:** HEADERS, JSON
+**Variants:** Image, Audio, Video, File
 
 
 ##### Input Parameters
+
+`POST /files`
 
 Parameter | Description | Header Key | Query Parameter
 --------- | ----------- | ---------- | --------------- |
@@ -739,13 +745,14 @@ Content-Length: 211
 }
 ```
 
-* **Description:** Read the contents of a previously created drop
-* **URI:** `/drops/:code`
-* **Method:** `GET`
-* **Supported formats:** HEADERS, JSON
+Read the contents of a previously created drop
+
+**Supported formats:** HEADERS, JSON
 
 
 ##### Input Parameters
+
+`GET /drops/:code`
 
 The only input parameter is the drop `code` supplied in the URL; e.g. `GET /drops/xkcd`.
 
@@ -831,13 +838,15 @@ Content-Length: ...
 ]
 ```
 
-* **Description:** Retrieve a list of previously created drops with the possibility to combine filters
-* **URI:** `/drops`
-* **Method:** `GET`
-* **Supported formats:** JSON
+
+Retrieve a list of previously created drops with the possibility to combine filters
+
+**Supported formats:** JSON
 
 
 ##### Input Parameters
+
+`GET /drops`
 
 Parameter | Description | Header Key | Query Parameter
 --------- | ----------- | ---------- | --------------- |
@@ -872,13 +881,15 @@ DELETE /drops/xkcd HTTP/1.1
 
 ```
 
-* **Description:** Delete a previously created drop
-* **URI:** `/drops/:code`
-* **Method:** `DELETE`
-* **Supported formats:** HEADERS (there is no output, so defaults to HEADERS)
+
+Delete a previously created drop
+
+**Supported formats:** HEADERS (there is no output, so defaults to HEADERS)
 
 
 ##### Input Parameters
+
+`DELETE /drops/:code`
 
 The only input parameter is the drop `code` supplied in the URL; e.g. `DELETE /drops/xkcd`.
 
@@ -918,15 +929,15 @@ GET /account HTTP/1.1
 }
 ```
 
-* **Description:** Retrieve information of a given account
-* **URI:** `/account`
-* **Method:** `GET`
-* **Supported formats:** HEADERS, JSON
+
+Retrieve information of a given account
+
+**Supported formats:** HEADERS, JSON
 
 
 ##### Input Parameters
 
-N/A
+`GET /account`
 
 
 ##### Output Parameters
@@ -952,3 +963,73 @@ Parameter | Description | Header Key | JSON Field
 ##### Notes
 
 * The account that's read is the one whose credentials are provided in the authentication header.
+
+
+### Edit Account Details
+
+>Example Request
+
+```
+PUT /account HTTP/1.1
+```
+
+```json
+  {
+    "password":"5f4dcc3b5aa765d61d8327deb882cf99",
+    "domain":"d.pr"
+  }
+```
+
+> Example Response
+
+```json
+{
+  "key":"value"
+}
+```
+
+
+Edit information for an account
+
+**Supported formats:** HEADERS, JSON
+
+
+##### Input Parameters
+
+`PUT /account`
+
+Parameter | Description | Header Key | Query Parameter
+--------- | ----------- | ---------- | --------------- |
+**Password** | The user's new password, hashed with SHA-1 algorithm. | `x-droplr-password` | `password`
+**Theme** | The theme to use on Droplr's website. This is a free-form string but typical values are 'default', 'light' and 'dark'. If the value is not recognized, the default theme will be used. Your application can also rely on this value to change its appearance. | `x-droplr-theme` | `theme`
+**Use custom domain** | A flag that indicates what type of domain should be used (if **Custom domain** property is set). | `x-droplr-domaintype` | `domainType`
+**Custom domain** | A custom domain to use when returning shortlinks for drops, if the **Use custom domain** flag is set. | `x-droplr-domain` | `domain`
+**Use root redirect** | A flag that indicates whether root redirects should be used when hitting the custom domain without a drop code. This property only makes sense if both **Custom domain** and **Root redirect** properties are set. | `x-droplr-userootredirect` | `useRootRedirect`
+**Root redirect** | Where to redirect HTTP requests to the custom domain (**Custom domain** property). | `x-droplr-rootredirect` | `rootRedirect`
+**Drop privacy** | The privacy setting with which new drops will be created. Acceptable values are `PUBLIC`, `PRIVATE` and `OBSCURE`. To change the privacy to `PRIVATE` a Pro account is required. All other changes are allowed. | `x-droplr-dropprivacy` | `dropPrivacy`
+
+
+##### Output Parameters
+
+All output parameters are the same as the [read account details](#read-account-details) action.
+
+
+##### Errors
+
+Error Code | Status Code | Cause | Error Message
+---------- | ----------- | ----- | ------------- |
+**EditAccount.NoUpdateData** | 400 | No update data was found on request (no-op request). | No update data
+**EditAccount.NoUpdateData** | 400 | No update data was found on request (no-op request). | No update data
+**EditAccount.ProRequired** | 403 | The operation attempted to edit one or more fields for which a Pro subscription was required. | A Pro subscription is required to edit field `%FIELD%`
+**EditAccount.ProRequiredEnableDomain** | 403 | The operation attempted to edit custom domain usage with a non-Pro user. | A Pro subscription is required to enable custom domain usage
+**EditAccount.ProRequiredEnableRootRedirect** | 403 | The operation attempted to edit root redirect usage with a non-Pro user. | A Pro subscription is required to enable root redirect usage
+**EditAccount.InvalidDomain** | 400 | The domain specified for the custom domain field is not valid (e.g. includes `http(s)://` or other invalid characters). | Domain is invalid
+**EditAccount.InvalidRootRedirect** | 400 | The input password parameter is not a SHA-1 hash. | Password must be a SHA1 hash of the user input
+**EditAccount.InvalidPassword** | 400 | The root redirect specified is not a valid URL. | Root redirect is invalid
+**EditAccount.Deleted** | 400 | The account has either been locked or deleted. | Account has been deleted
+
+
+##### Notes
+
+* Only Pro accounts can change their custom domain, root redirect and privacy to `PUBLIC`. Regular accounts can change privacy option, as long as target privacy option is `PUBLIC` or `OBSCURE`.
+* The **domain** input parameter must **not** contain the scheme information, i.e. to use the custom domain `http://droplr.biasedbit.com`, the app must only provide the string `droplr.biasedbit.com`.
