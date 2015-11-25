@@ -442,3 +442,94 @@ String accessibleUrl(Drop drop) {
 }
 ```
 With any arbitrary language, assuming `Drop` represents a properly parsed drop response from the server, this algorithm will ensure that an accessible url is generated for a drop.
+
+## Actions
+
+### Shorten link
+
+> Example Request
+
+```shell
+POST /links HTTP/1.0
+...
+x-droplr-privacy: PRIVATE
+x-droplr-password: quagmire
+...
+```
+
+> Example Response
+
+```
+HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: LINK
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+```
+```json
+{
+  "totalSpace":10000,
+  "title":"http://droplr.com",
+  "usedSpace":11,
+  "createdAt":1304642741028,
+  "code":"xkcd","type":"LINK",
+  "shortlink":"http://d.pr/xkcd",
+  "size":11,
+  "privacy":"PUBLIC",
+  "obscureCode":"xkcdXKCDxkcdXKCD"
+}
+```
+
+* **Description:** Create a short link to a long link.
+* **URI:** `/links`
+* **Method:** `POST`
+* **Supported formats:** HEADERS, JSON
+* **Variants:** n/a
+
+
+##### Input Parameters
+
+Parameter | Description | Header Key | Query Field
+--------- | ----------- | ---------- | ----------- |
+**Drop privacy** | The privacy with which this drop should be created, overriding default account settings. | `x-droplr-privacy` | `privacy`
+**Drop password** | The password with which this drop should be created, overriding default password generation. | `x-droplr-password` | `password`
+
+
+##### Output Parameters
+
+Parameter | Description | Header Key | JSON Field
+--------- | ----------- | ---------- | ---------- |
+**Drop code** | The code for the drop. | `x-droplr-code` | `code`
+**Created at** | The timestamp, since UTC (in milliseconds), when the drop was created. | `x-droplr-createdat` | `createdAt`
+**Type** | The type of drop (LINK, NOTE, IMAGE, VIDEO, AUDIO, FILE). | `x-droplr-type` | `type`
+**Title** | The title of the drop. | `x-droplr-title` header -- Base64 encoded (in order to preserve UTF-8 char | `title`
+**Size** | The size of the drop, in bytes. | `x-droplr-size` | `size`
+**Privacy** | The privacy mode with which the drop was created. Possible values are `PUBLIC`, `PRIVATE` or `OBSCURE`. | `x-droplr-privacy` | `privacy`
+**Password** | The password with which the drop was created. Will only be present of drop privacy was set to `PRIVATE`. Password is sent as plain text (reminder: the HTTP connection is encrypted) as drop passwords can only contain characters allowed in a URL path component | `x-droplr-password` | `privacy`
+**Obscure code** | A hard-to-guess 16 char unique string that maps to this drop. Drops can be accessed either via short code or obscure code. Drops configured to use `OBSCURE` privacy can only be accessed via obscure code. | `x-droplr-obscurecode` | `obscureCode`
+**Shortlink** | The shortlink where the drop is available at; it's a concatenation of the user's custom domain (if set) or Droplr's default domain and the drop code. | `x-droplr-shortlink` | `shortlink`
+**Used space** | The total used space for the account creating the drop, in bytes. | `x-droplr-usedspace` | `usedSpace`
+**Total space** | The total space availabe for the account creating the drop, in bytes. | `x-droplr-totalspace` | `totalSpace`
+
+
+##### Errors
+
+Error Code | Status Code | Cause | Error Message
+---------- | ----------- | ----- | ------------- |
+**CreateDrop.InvalidUrl** | 400 | The link to shorten is an invalid link. | Invalid URL
+**CreateDrop.RecursiveLink** | 400 | The link to shorten is a link to one of Droplr's domains (or subdomains). | Cannot shorten links to Droplr's urls
+
+
+##### Notes
+
+* The title for the drop generated with this operation will be the original link itself. If the target is a webpage, the title will eventually be updated the the title of the webpage -- assuming there is one.
+* This action does not allow shortening links to Droplr's domains (`droplr.com` and `d.pr`) or its subdomains.
