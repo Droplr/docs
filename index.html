@@ -4,18 +4,13 @@
     <meta charset="utf-8">
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>API Reference</title>
+    <title>Droplr API Documentation</title>
 
     <link href="stylesheets/screen.css" rel="stylesheet" type="text/css" media="screen" />
     <link href="stylesheets/print.css" rel="stylesheet" type="text/css" media="print" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
       <script src="javascripts/all.js" type="text/javascript"></script>
 
-      <script>
-        $(function() {
-          setupLanguages(["shell","ruby","python"]);
-        });
-      </script>
   </head>
 
   <body class="index">
@@ -27,248 +22,1136 @@
     </a>
     <div class="tocify-wrapper">
       <img src="images/logo.png" />
-        <div class="lang-selector">
-              <a href="#" data-language-name="shell">shell</a>
-              <a href="#" data-language-name="ruby">ruby</a>
-              <a href="#" data-language-name="python">python</a>
-        </div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
         <ul class="search-results"></ul>
       <div id="toc">
       </div>
-        <ul class="toc-footer">
-            <li><a href='#'>Sign Up for a Developer Key</a></li>
-            <li><a href='http://github.com/tripit/slate'>Documentation Powered by Slate</a></li>
-        </ul>
     </div>
     <div class="page-wrapper">
       <div class="dark-box"></div>
       <div class="content">
         <h1 id="introduction">Introduction</h1>
 
-<p>Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.</p>
+<p>Welcome to the Droplr API. This documentation is split up between <a href="#private-operations">private</a> and <a href="#public-operations">public</a> operations.</p>
 
-<p>We have language bindings in Shell, Ruby, and Python! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.</p>
+          <h1 id="private-operations">Private Operations</h1>
 
-<p>This example API documentation page was created with <a href="http://github.com/tripit/slate">Slate</a>. Feel free to edit it and use it as a base for your own API&rsquo;s documentation.</p>
+<h2 id="session-based-authentication">Session-based Authentication</h2>
 
-<h1 id="authentication">Authentication</h1>
+<p>Droplr&rsquo;s API server notion of session is a bit different from what the name may imply. The basis of the authentication system is the email/password based authentication. However, this system is not adequate for the anonymous drag &amp; drop upload feature presented by the Droplr&rsquo;s web site.</p>
 
-<blockquote>
-<p>To authorize, use this code:</p>
-</blockquote>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>Droplr&rsquo;s API had, therefore, to support some kind of anonymous authentication mechanism that worked pretty much the same way as an email/password authentication system, except accounts could be created on-the-fly without registration info.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<p>The session-based authentication works by performing calls to the server using a variant of the authentication mechanism and providing a unique identifier - the session identifier - instead of the typical email/password combination.</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code><span class="c"># With shell, you can just pass the correct header with each request</span>
-curl <span class="s2">"api_endpoint_here"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>A session works pretty much the same way as a regular account, except it has more restrictive limits:</p>
 
-<blockquote>
-<p>Make sure to replace <code class="prettyprint">meowmeowmeow</code> with your API key.</p>
-</blockquote>
+<ul>
+<li>Upload size is limited to 10MB per file</li>
+<li>The daily upload cap is 10 drops</li>
+<li>The maximum space allowed is 100MB</li>
+<li>After a period of 3 days of inactivity, all drops are deleted</li>
+</ul>
 
-<p>Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our <a href="http://example.com/developers">developer portal</a>.</p>
-
-<p>Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:</p>
-
-<p><code class="prettyprint">Authorization: meowmeowmeow</code></p>
+<p>The idea of anonymous upload is to allow people to try out Droplr really quick and then proceed to register a regular account. In the process of registering, all the previous anonymous uploads are migrated &ndash; if a user uploads a file using the anonymous drag&amp;drop and then registers, that file will be present when he lists the drops in his new account.</p>
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+  The session id must be 32-char long alphanumeric string (MD5 hash).
 </aside>
 
-<h1 id="kittens">Kittens</h1>
+<h3 id="session-authentication-formula">Session Authentication Formula</h3>
 
-<h2 id="get-all-kittens">Get All Kittens</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
+<p>Starting from the end, an example of how an session Authorization header should look is:</p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
+<p><code class="prettyprint">Authorization: droplrses cHVibGlja2V5OmQwNmY2ZTZlOTEyOGEyMzkzYjczNThmZjcwMTI0NTUw:QC0bWeSf8m979k4+AJ6lLxeMAfg=</code></p>
 
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
-</code></pre>
+<p>This can be decomposed as:</p>
+
+<p><code class="prettyprint">Authorization: droplrses BASE64(ApplicationPublicKey:SessionId):signature</code></p>
+
+<p>Where <code class="prettyprint">ApplicationPublicKey</code> and <code class="prettyprint">SessionId</code> are the application&rsquo;s assigned public key and the session identifier. The formula to compute the <code class="prettyprint">signature</code> parameter is:</p>
+
+<p><code class="prettyprint">HMAC_SHA1(ApplicationPrivateKey:Password, stringToSign)</code></p>
+
+<p>The first big difference to the user based authentication system appears here. Since we&rsquo;re talking about anonymous volatile sessions, there are not passwords set. In order for Droplr to ensure the validity of the request, the password is itself a token calculated based on the session id. Its formula is thus:</p>
+
+<p><code class="prettyprint"># generate an authenticity token</code></p>
+
+<p><code class="prettyprint">authenticityToken = MD5(ApplicationPrivateKey:SessionId:Salt)</code></p>
+
+<p><code class="prettyprint"># the password is the first half of the sessionId concatenated with the second half of the authenticity token</code></p>
+
+<p><code class="prettyprint">Password = SUBSTRING(SessionId, 0, 16) + SUBSTRING(authenticityToken, 16, 32)</code></p>
+
+<p>The <code class="prettyprint">Salt</code> is a safe string (not documented here) to further reduce the chances of creating a valid request for abuse.</p>
+
+<p>The process to create the <code class="prettyprint">stringToSign</code> token is exactly the same as for user based authentication.</p>
+
+<h3 id="session-creation">Session Creation</h3>
+
+<p>The only way to create new sessions using session-based authentication is to perform a drop upload. When using session based authentication against <code class="prettyprint">Create Drop - Link</code>, <code class="prettyprint">Create Drop - Note</code> or <code class="prettyprint">Create Drop - File</code> operations, the server will either associate the drop with an existing session or create a new record, if no previous session with the same id existed.</p>
+
+<h2 id="anonyomous-authentication">Anonyomous Authentication</h2>
+
+<p>Droplr&rsquo;s API server also supports anonymous user authentication.
+This authentication&rsquo;s formula is exactly the same as user-based authentication, except for the fact that the email must be <code class="prettyprint">anonymous@droplr.com</code> and the password is a SHA-1 hash of the string <code class="prettyprint">anonymous</code>.
+Furthermore, the type of authentication identifier of the <em>Authorization</em> header is <code class="prettyprint">droplranon</code> rather than <code class="prettyprint">droplr</code>.</p>
+
+<p>Example:</p>
+
+<p><code class="prettyprint">Authorization: droplranon cHVibGlja2V5OmFub255bW91c0Bkcm9wbHIuY29t:m3n/LQOwt3Cv95KfJsnlbG2R/lM=</code></p>
+
+<p>The applications of this authentication are limited; currently it&rsquo;s only valid for the creation of new accounts and reading drops &ndash; assuming the application has enough <a href="#privileges">privileges</a> to execute the operations.</p>
+
+<h2 id="actions">Actions</h2>
+
+<h3 id="create-account">Create Account</h3>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Example Request</p>
 </blockquote>
-<pre class="highlight json"><code><span class="p">[</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Fluffums"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"calico"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">7</span><span class="w">
-  </span><span class="p">},</span><span class="w">
-  </span><span class="p">{</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
-  </span><span class="p">}</span><span class="w">
-</span><span class="p">]</span><span class="w">
-</span></code></pre>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"test-26z84u30@droplr.com"</span><span class="p">,</span>
+  <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"</span><span class="p">,</span>
+  <span class="s2">"firstName"</span><span class="p">:</span> <span class="s2">"Node"</span><span class="p">,</span>
+  <span class="s2">"lastName"</span><span class="p">:</span> <span class="s2">"Client"</span>
+<span class="p">});</span>
 
-<p>This endpoint retrieves all kittens.</p>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/api/kittens</code></p>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>include_cats</td>
-<td>false</td>
-<td>If set to true, the result will also include cats.</td>
-</tr>
-<tr>
-<td>available</td>
-<td>true</td>
-<td>If set to false, the result will include kittens that have already been adopted.</td>
-</tr>
-</tbody></table>
-
-<aside class="success">
-Remember — a happy kitten is an authenticated kitten!
-</aside>
-
-<h2 id="get-a-specific-kitten">Get a Specific Kitten</h2>
-<pre class="highlight ruby"><code><span class="nb">require</span> <span class="s1">'kittn'</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="no">Kittn</span><span class="o">::</span><span class="no">APIClient</span><span class="p">.</span><span class="nf">authorize!</span><span class="p">(</span><span class="s1">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="p">.</span><span class="nf">kittens</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight python"><code><span class="kn">import</span> <span class="nn">kittn</span>
-
-<span class="n">api</span> <span class="o">=</span> <span class="n">kittn</span><span class="o">.</span><span class="n">authorize</span><span class="p">(</span><span class="s">'meowmeowmeow'</span><span class="p">)</span>
-<span class="n">api</span><span class="o">.</span><span class="n">kittens</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</code></pre>
-<pre class="highlight shell"><code>curl <span class="s2">"http://example.com/api/kittens/2"</span>
-  -H <span class="s2">"Authorization: meowmeowmeow"</span>
+<span class="nx">request</span><span class="p">({</span>
+   <span class="s2">"method"</span><span class="p">:</span><span class="s2">"POST"</span><span class="p">,</span>
+   <span class="s2">"url"</span><span class="p">:</span><span class="s2">"http://sandbox.droplr.com:8069/account"</span><span class="p">,</span>
+   <span class="s2">"headers"</span><span class="p">:{</span>
+      <span class="s2">"Date"</span><span class="p">:</span><span class="s2">"Fri, 01 Aug 2014 19:51:54 GMT"</span><span class="p">,</span>
+      <span class="s2">"Accept"</span><span class="p">:</span><span class="s2">"application/json; version=0.9"</span><span class="p">,</span>
+      <span class="s2">"User-Agent"</span><span class="p">:</span><span class="s2">"droplr-node-client"</span><span class="p">,</span>
+      <span class="s2">"Content-Type"</span><span class="p">:</span><span class="s2">"application/json"</span><span class="p">,</span>
+      <span class="s2">"Authorization"</span><span class="p">:</span><span class="s2">"droplranon YXBwXzBfcHVibGlja2V5OmFub255bW91c0Bkcm9wbHIuY29t:gR0G6jV8LHGwbhoN0XFkI7TJu6k="</span>
+   <span class="p">},</span>
+   <span class="s2">"body"</span><span class="err">:</span> <span class="nx">user</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+     <span class="c1">// Do something with the response</span>
+<span class="p">});</span>
 </code></pre>
 
 <blockquote>
-<p>The above command returns JSON structured like this:</p>
+<p>Example Response</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Isis"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"breed"</span><span class="p">:</span><span class="w"> </span><span class="s2">"unknown"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"fluffiness"</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"cuteness"</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="w">
+   </span><span class="nt">"teamName"</span><span class="p">:</span><span class="s2">"droplr"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"totalSpace"</span><span class="p">:</span><span class="mi">107374182400</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"teamAdmin"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"team"</span><span class="p">:</span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"PRO"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"extraSpace"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"email"</span><span class="p">:</span><span class="s2">"user@droplr.com"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1406919673658</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"verified"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"dropPrivacy"</span><span class="p">:</span><span class="s2">"PRIVATE"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"subdomain"</span><span class="p">:</span><span class="s2">"droplr"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"trial"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"subscriptionEnd"</span><span class="p">:</span><span class="mi">1409511673658</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p>This endpoint retrieves a specific kitten.</p>
+<p><code class="prettyprint">POST /account</code></p>
 
-<aside class="warning">If you&rsquo;re not using an administrator API key, note that some kittens will return 403 Forbidden if they are hidden for admins only.</aside>
-
-<h3 id="http-request">HTTP Request</h3>
-
-<p><code class="prettyprint">GET http://example.com/kittens/&lt;ID&gt;</code></p>
-
-<h3 id="url-parameters">URL Parameters</h3>
+<p><strong>Arguments</strong></p>
 
 <table><thead>
 <tr>
-<th>Parameter</th>
-<th>Description</th>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>ID</td>
-<td>The ID of the kitten to retrieve</td>
+<td style="text-align: left">email</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The email of the account to be created</td>
+</tr>
+<tr>
+<td style="text-align: left">password</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The account password, hashed with MD5 algorythm</td>
+</tr>
+<tr>
+<td style="text-align: left">domain</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The domain to be used for shortlinks</td>
+</tr>
+<tr>
+<td style="text-align: left">domainType</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">What should be used in shortlinks DEFAULT, DOMAIN, SUB_DOMAIN</td>
+</tr>
+<tr>
+<td style="text-align: left">subdomain</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The subdomain to be used shortlinks (e.g. subdomain.d.pr/xkdg).</td>
+</tr>
+<tr>
+<td style="text-align: left">firstName</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s first name</td>
+</tr>
+<tr>
+<td style="text-align: left">lastName</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s last name</td>
+</tr>
+<tr>
+<td style="text-align: left">username</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s username</td>
+</tr>
+<tr>
+<td style="text-align: left">dropPrivacy</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">PUBLIC or PRIVATE</td>
+</tr>
+<tr>
+<td style="text-align: left">theme</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">light or dark</td>
 </tr>
 </tbody></table>
 
-          <h1 id="errors">Errors</h1>
+<h4 id="error-responses">Error Responses</h4>
 
-<aside class="notice">This error section is stored in a separate file in `includes/_errors.md`. Slate allows you to optionally separate out your docs into many files&hellip;just save them to the `includes` folder and add them to the top of your `index.md`&rsquo;s frontmatter. Files are included in the order listed.</aside>
+<h5 id="response-if-email-or-password-are-missing">Response if email or password are missing</h5>
 
-<p>The Kittn API uses the following error codes:</p>
+<p><code class="prettyprint">400 Bad Request</code></p>
 
 <table><thead>
 <tr>
-<th>Error Code</th>
-<th>Meaning</th>
+<th>Header Key</th>
+<th>Header Value</th>
 </tr>
 </thead><tbody>
 <tr>
-<td>400</td>
-<td>Bad Request &ndash; Your request sucks</td>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
 </tr>
 <tr>
-<td>401</td>
-<td>Unauthorized &ndash; Your API key is wrong</td>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
 </tr>
 <tr>
-<td>403</td>
-<td>Forbidden &ndash; The kitten requested is hidden for administrators only</td>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
 </tr>
 <tr>
-<td>404</td>
-<td>Not Found &ndash; The specified kitten could not be found</td>
-</tr>
-<tr>
-<td>405</td>
-<td>Method Not Allowed &ndash; You tried to access a kitten with an invalid method</td>
-</tr>
-<tr>
-<td>406</td>
-<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
-</tr>
-<tr>
-<td>410</td>
-<td>Gone &ndash; The kitten requested has been removed from our servers</td>
-</tr>
-<tr>
-<td>418</td>
-<td>I&rsquo;m a teapot</td>
-</tr>
-<tr>
-<td>429</td>
-<td>Too Many Requests &ndash; You&rsquo;re requesting too many kittens! Slow down!</td>
-</tr>
-<tr>
-<td>500</td>
-<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
-</tr>
-<tr>
-<td>503</td>
-<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintanance. Please try again later.</td>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
 </tr>
 </tbody></table>
+
+<h5 id="response-if-the-email-is-not-valid">Response if the email is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-email-is-already-taken">Response if the email is already taken</h5>
+
+<p><code class="prettyprint">409 Conflict</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.EmailAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">That email is already taken; if it&#39;s yours please contact Droplr support</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.EmailAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">That email is already taken; if it&#39;s yours please contact Droplr support</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-password-is-not-valid">Response if the password is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Password must be a SHA1 hash of the user input</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Password must be a SHA1 hash of the user input</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-username-is-not-valid">Response if the username is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidUsername</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Invalid Username</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidUsername</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Invalid Username</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-username-is-already-taken">Response if the username is already taken</h5>
+
+<p><code class="prettyprint">409 Conflict</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.UsernameAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">That username is already taken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.UsernameAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">That username is already taken</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-domain-is-already-taken">Response if domain is already taken</h5>
+
+<p><code class="prettyprint">409 Conflict</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.DomainAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Domain already taken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.DomainAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Domain already taken</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+    <li>Subdomain will be used for teamName.</li>
+    <li>If a subdomain is provided but is in use, an incremental integer will be added as a suffix.</li>
+    <li>If a subdomain is not provided one will be derived from the email domain.</li>
+  </ul>
+</aside>
+
+<h3 id="create-team-member-account">Create Team Member Account</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"test-26z84u30@droplr.com"</span><span class="p">,</span>
+  <span class="s2">"password"</span><span class="p">:</span> <span class="s2">"5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8"</span><span class="p">,</span>
+  <span class="s2">"firstName"</span><span class="p">:</span> <span class="s2">"Node"</span><span class="p">,</span>
+  <span class="s2">"lastName"</span><span class="p">:</span> <span class="s2">"Client"</span>
+<span class="p">});</span>
+
+<span class="nx">request</span><span class="p">({</span>
+   <span class="s2">"method"</span><span class="p">:</span><span class="s2">"POST"</span><span class="p">,</span>
+   <span class="s2">"url"</span><span class="p">:</span><span class="s2">"http://sandbox.droplr.com:8069/teams/1/account"</span><span class="p">,</span>
+   <span class="s2">"headers"</span><span class="p">:{</span>
+      <span class="s2">"Date"</span><span class="p">:</span><span class="s2">"Fri, 01 Aug 2014 19:51:54 GMT"</span><span class="p">,</span>
+      <span class="s2">"Accept"</span><span class="p">:</span><span class="s2">"application/json; version=0.9"</span><span class="p">,</span>
+      <span class="s2">"User-Agent"</span><span class="p">:</span><span class="s2">"droplr-node-client"</span><span class="p">,</span>
+      <span class="s2">"Content-Type"</span><span class="p">:</span><span class="s2">"application/json"</span><span class="p">,</span>
+      <span class="s2">"Authorization"</span><span class="p">:</span><span class="s2">"droplranon YXBwXzBfcHVibGlja2V5OmFub255bW91c0Bkcm9wbHIuY29t:gR0G6jV8LHGwbhoN0XFkI7TJu6k="</span>
+   <span class="p">},</span>
+   <span class="s2">"body"</span><span class="err">:</span> <span class="nx">user</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+     <span class="c1">// Do something with the response</span>
+<span class="p">});</span>
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">  
+   </span><span class="nt">"teamName"</span><span class="p">:</span><span class="s2">"my co"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"useLogo"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"logo"</span><span class="p">:</span><span class="s2">"http://logo"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"totalSpace"</span><span class="p">:</span><span class="mi">107374182400</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"usedSpace"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"theme"</span><span class="p">:</span><span class="s2">"light"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"team"</span><span class="p">:</span><span class="s2">"team_id"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"domainType"</span><span class="p">:</span><span class="s2">"DEFAULT"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"PRO"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"id"</span><span class="p">:</span><span class="s2">"id"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"dropCount"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"maxUploadSize"</span><span class="p">:</span><span class="mi">2147483648</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"rootRedirect"</span><span class="p">:</span><span class="s2">"http://biasedbit.com"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"username"</span><span class="p">:</span><span class="s2">"user1"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"extraSpace"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"email"</span><span class="p">:</span><span class="s2">"user1@droplr.com"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1406929260072</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"verified"</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"dropPrivacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"subdomain"</span><span class="p">:</span><span class="s2">"myco"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"domain"</span><span class="p">:</span><span class="s2">"drops.biasedbit.com"</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"useRootRedirect"</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"activeDrops"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+   </span><span class="nt">"subscriptionEnd"</span><span class="p">:</span><span class="mi">1406929258896</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">POST /teams/:team_id/account</code></p>
+
+<p><strong>Arguments</strong></p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">email</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The email of the account to be created</td>
+</tr>
+<tr>
+<td style="text-align: left">password</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The account password, hashed with MD5 algorythm</td>
+</tr>
+<tr>
+<td style="text-align: left">firstName</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s first name</td>
+</tr>
+<tr>
+<td style="text-align: left">lastName</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s last name</td>
+</tr>
+<tr>
+<td style="text-align: left">username</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left">The user&rsquo;s username</td>
+</tr>
+</tbody></table>
+
+<h4 id="error-responses">Error Responses</h4>
+
+<h5 id="response-if-email-or-password-are-missing">Response if email or password are missing</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.MissingEmailOrPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Missing email and/or password</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.MissingEmailOrPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Missing email and/or password</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-email-is-not-valid">Response if the email is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidEmail</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Email is not valid</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-email-is-already-taken">Response if the email is already taken</h5>
+
+<p><code class="prettyprint">409 Conflict</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.EmailAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">That email is already taken; if it&#39;s yours please contact Droplr support</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.EmailAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">That email is already taken; if it&#39;s yours please contact Droplr support</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-password-is-not-valid">Response if the password is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Password must be a SHA1 hash of the user input</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidPassword</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Password must be a SHA1 hash of the user input</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-username-is-not-valid">Response if the username is not valid</h5>
+
+<p><code class="prettyprint">400 Bad Request</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidUsername</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">Invalid Username</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.InvalidUsername</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">Invalid Username</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="response-if-the-username-is-already-taken">Response if the username is already taken</h5>
+
+<p><code class="prettyprint">409 Conflict</code></p>
+
+<table><thead>
+<tr>
+<th>Header Key</th>
+<th>Header Value</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><code class="prettyprint">droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.UsernameAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">droplr-errordetails</code></td>
+<td><code class="prettyprint">That username is already taken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errorcode</code></td>
+<td><code class="prettyprint">CreateAccount.UsernameAlreadyTaken</code></td>
+</tr>
+<tr>
+<td><code class="prettyprint">x-droplr-errordetails</code></td>
+<td><code class="prettyprint">That username is already taken</code></td>
+</tr>
+</tbody></table>
+
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+  </ul>
+</aside>
+
+<h3 id="update-a-customer_id">Update a customer_id</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight javascript"><code><span class="kd">var</span> <span class="nx">subscriptionId</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({</span>
+  <span class="s2">"email"</span><span class="p">:</span> <span class="s2">"test-26z84u30@droplr.com"</span><span class="p">,</span>
+  <span class="s2">"service"</span><span class="p">:</span> <span class="s2">"stripe"</span><span class="p">,</span>
+  <span class="s2">"customerId"</span><span class="p">:</span> <span class="s2">"xkdc"</span>
+<span class="p">});</span>
+
+<span class="nx">request</span><span class="p">({</span>  
+   <span class="s2">"method"</span><span class="p">:</span><span class="s2">"PUT"</span><span class="p">,</span>
+   <span class="s2">"url"</span><span class="p">:</span><span class="s2">"http://sandbox.droplr.com:8069/account/customer_id"</span><span class="p">,</span>
+   <span class="s2">"headers"</span><span class="p">:{</span>  
+      <span class="s2">"Date"</span><span class="p">:</span><span class="s2">"Wed, 06 Aug 2014 20:55:35 GMT"</span><span class="p">,</span>
+      <span class="s2">"Accept"</span><span class="p">:</span><span class="s2">"application/json; version=1.0"</span><span class="p">,</span>
+      <span class="s2">"User-Agent"</span><span class="p">:</span><span class="s2">"droplr-node-client"</span><span class="p">,</span>
+      <span class="s2">"Content-Type"</span><span class="p">:</span><span class="s2">"application/json; v=1.0; encoding=utf-8;"</span><span class="p">,</span>
+      <span class="s2">"Authorization"</span><span class="p">:</span><span class="s2">"droplranon YXBwXzBfcHVibGlja2V5OmFub255bW91c0Bkcm9wbHIuY29t:/xAaACyWDdtVIdCMrfRU7xos9TY="</span>
+   <span class="p">},</span>
+   <span class="s2">"body"</span><span class="err">:</span> <span class="nx">subscriptionId</span>
+<span class="p">},</span> <span class="kd">function</span><span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">resp</span><span class="p">,</span> <span class="nx">body</span><span class="p">)</span> <span class="p">{</span>
+     <span class="c1">// Do something with the response</span>
+<span class="p">});</span>
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{}</span><span class="w">
+</span></code></pre>
+
+<p><code class="prettyprint">PUT /account/customer_id</code></p>
+
+<p><strong>Arguments</strong></p>
+
+<table><thead>
+<tr>
+<th style="text-align: left">Name</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td style="text-align: left">email</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The email of the account to be update</td>
+</tr>
+<tr>
+<td style="text-align: left">service</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The service for which customerId will be updated</td>
+</tr>
+<tr>
+<td style="text-align: left">customerId</td>
+<td style="text-align: left">string</td>
+<td style="text-align: left"><strong>Required</strong> The customerId to be set for service</td>
+</tr>
+</tbody></table>
+
+<h4 id="error-responses">Error Responses</h4>
+
+<h3 id="convert-session-to-account">Convert Session to Account</h3>
+
+<p><code class="prettyprint">POST /sessions/convert</code></p>
+
+<p><strong>Arguments</strong></p>
+
+<p>Same input parameters and format as <a href="#create-account">create account</a> action.</p>
+
+<h4 id="responses">Responses</h4>
+
+<p>Same output parameters and format as <a href="#create-account">create account</a> action.</p>
+
+<aside class="notice">
+  <ul>
+    <li>The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).</li>
+    <li>This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.</li>
+  </ul>
+</aside>
+
+          <h1 id="public-operations">Public Operations</h1>
+
+<h2 id="authentication-amp-authorization">Authentication &amp; Authorization</h2>
+
+<p>All API operations must be properly authenticated. In order for you to access the API you must have a public/private key combination to access Droplr&rsquo;s API server.</p>
+
+<p>Authentication works on a per-request basis, which means that every single request must be pre-signed according to its contents.</p>
+
+<p>Droplr API server uses a custom authentication method along with some other mechanisms to ensure a safe non-reversible authentication method which is also immunte to replay attacks.</p>
+
+<h3 id="protection-against-replay-attacks">Protection Against Replay Attacks</h3>
+
+<p>All requests must include a <code class="prettyprint">Date</code> header, with the time in Unix (POSIX) format &ndash; the <strong>milliseconds</strong> elapsed since midnight January 1st, 1970, UTC.</p>
+
+<p>This value must fall within 15 minutes (ahead or behind) the server&rsquo;s clock. If this condition fails, the requests may be discarded. Furthermore, the server keeps used signatures in a local cache &ndash; during the time window in which they are valid &ndash; in order to avoid replay attacks.</p>
+
+<aside class="notice">
+  If the framework you&rsquo;re using doesn&rsquo;t allow you to manually set the <code>Date</code> header, you can use the custom <code>x-droplr-date</code> header. When set, this header will take precedence over the <code>Date</code> header.
+</aside>
+
+<h3 id="application-privileges">Application Privileges</h3>
+
+<p>Droplr API server provides many operations; the ability to execute them depends on the privileges configured for the public/private API key pair assigned to an application.</p>
+
+<p>As an example, a typical third party application will be able to list drops, perform uploads, delete drops and alter user information but it won&rsquo;t be able to create new accounts.</p>
+
+<h3 id="authentication-formula">Authentication Formula</h3>
+<pre class="highlight shell"><code><span class="c"># Example Authorization header</span>
+
+Authorization: droplr YXBwXzBfcHVibGlja2V5OnVzZXJfMUBkcm9wbHIuY29t:3+MqSMFYYwh6grneUezBtRkunmE<span class="o">=</span>
+</code></pre>
+
+<p>Starting from the end, an example of how an <code class="prettyprint">Authorization</code> header should look is:</p>
+
+<p><code class="prettyprint">Authorization: droplr YXBwXzBfcHVibGlja2V5OnVzZXJfMUBkcm9wbHIuY29t:3+MqSMFYYwh6grneUezBtRkunmE=</code></p>
+
+<p>This can be decomposed as:</p>
+
+<p><code class="prettyprint">Authorization: droplr BASE64(ApplicationPublicKey:UserEmail):signature</code></p>
+
+<p>Where <code class="prettyprint">ApplicationPublicKey</code> and <code class="prettyprint">UserEmail</code> are your application&rsquo;s assigned public key and the user&rsquo;s email.
+The formula to compute the <code class="prettyprint">signature</code> parameter is:</p>
+
+<p><code class="prettyprint">HMAC_SHA1(ApplicationPrivateKey:UserPasswordSHA1, stringToSign)</code></p>
+
+<p><code class="prettyprint">ApplicationPrivateKey</code> and <code class="prettyprint">UserPasswordSHA1</code> are your application&rsquo;s assigned secret key and the user&rsquo;s (hashed) password.
+The hashing function for the password is SHA-1.</p>
+
+<aside class="notice">
+  We <strong>strongly recommend</strong> you to always store the hash of the password as your users enter their credentials, discarding the clear password as soon as possible.
+</aside>
+<pre class="highlight shell"><code><span class="c"># Example stringToSign parameter</span>
+
+POST /note.json HTTP/1.1<span class="se">\n</span>
+text/plain<span class="se">\n</span>
+1299648278321
+
+
+<span class="c"># Example stringToSign parameter with no contentType</span>
+
+GET /files/code HTTP/1.1<span class="se">\n</span>
+<span class="se">\n</span>
+1299648278321
+
+
+<span class="c"># Putting it all together</span>
+
+stringToSign <span class="o">=</span> Request-Line<span class="se">\n</span>
+               Content-Type<span class="se">\n</span>
+               Date
+
+signature <span class="o">=</span> HMAC_SHA1<span class="o">(</span>ApplicationPrivateKey:MD5<span class="o">(</span>UserPassword<span class="o">)</span>, stringToSign<span class="o">)</span>
+
+Authorization: droplr BASE64<span class="o">(</span>ApplicationPublicKey:UserEmail<span class="o">)</span>:signature
+</code></pre>
+
+<p>The <code class="prettyprint">stringToSign</code> parameter is a concatenation of some of the contents of the request.</p>
+
+<p>The parameter <code class="prettyprint">requestLine</code> is simply the concatenation of the method, URI and HTTP version (with spaces):</p>
+
+<p><code class="prettyprint">GET /files/code HTTP/1.1</code></p>
+
+<p><code class="prettyprint">contentType</code> and <code class="prettyprint">date</code> parameters are the <code class="prettyprint">Content-Type</code> and <code class="prettyprint">Date</code> headers included in the request. While <code class="prettyprint">contentType</code> may be an empty string (for requests that bear no body), <code class="prettyprint">date</code> is mandatory and must have a value.</p>
+
+<aside class="warning">
+  Even when <code>contentType</code> is empty, its trailing line break <strong>MUST</strong> be included. 
+</aside>
+
+<h3 id="examples">Examples</h3>
+
+<p>This sub-section provides a couple of examples of requests and their respective generated signature.</p>
+
+<p>The following credentials will be assumed throughout the examples:</p>
+
+<ul>
+<li><strong>Public application key:</strong> <code class="prettyprint">family_app</code></li>
+<li><strong>Private application key:</strong> <code class="prettyprint">quahog</code></li>
+<li><strong>User email:</strong> <code class="prettyprint">quagmire@droplr.com</code></li>
+<li><strong>User password:</strong> <code class="prettyprint">giggity</code> (will be hashed to <code class="prettyprint">1869bfcf575c810780534a7f5e4f6c225b4ca3bd</code>)</li>
+</ul>
+
+<aside class="warning">
+  The pair of characters <code>\n</code> represents the newline character. Do not escape the newline character when creating the signature.
+</aside>
+
+<h4 id="signature-example-1-reading-account-details-json">Signature Example 1: Reading Account Details (JSON)</h4>
+
+<p>Request:</p>
+
+<ul>
+<li>GET /account.json HTTP/1.1</li>
+<li>Date: 1335230330353</li>
+<li>Content-Length: 0</li>
+</ul>
+
+<p>Signature generation stages:</p>
+
+<ol>
+<li>Access key: <code class="prettyprint">ZmFtaWx5X2FwcDpxdWFnbWlyZUBkcm9wbHIuY29t</code></li>
+<li>Access secret: <code class="prettyprint">quahog:1869bfcf575c810780534a7f5e4f6c225b4ca3bd</code></li>
+<li>String to sign: <code class="prettyprint">GET /account.json HTTP/1.1\n\n1335230330353</code></li>
+<li>Signature: <code class="prettyprint">1cGqXOeNPRM5PPpDl1Ca/DdWesY=</code></li>
+</ol>
+
+<p>Expected value of <code class="prettyprint">Authorization</code> header:</p>
+
+<p><code class="prettyprint">droplr ZmFtaWx5X2FwcDpxdWFnbWlyZUBkcm9wbHIuY29t:1cGqXOeNPRM5PPpDl1Ca/DdWesY=</code></p>
+
+<h4 id="signature-example-2-creating-a-new-note-json">Signature Example 2: Creating a New Note (JSON)</h4>
+
+<p>Request:</p>
+
+<ul>
+<li>POST /notes.json HTTP/1.1</li>
+<li>Date: 1335228853999</li>
+<li>Content-Type: text/plain</li>
+<li>Content-Length: 52</li>
+<li>(&hellip; POST body &hellip;) </li>
+</ul>
+
+<p>Signature generation stages:</p>
+
+<ol>
+<li>Access key: <code class="prettyprint">ZmFtaWx5X2FwcDpxdWFnbWlyZUBkcm9wbHIuY29t</code></li>
+<li>Access secret: <code class="prettyprint">quahog:1869bfcf575c810780534a7f5e4f6c225b4ca3bd</code></li>
+<li>String to sign: <code class="prettyprint">POST /notes.json HTTP/1.1\ntext/plain\n1335229121561</code></li>
+<li>Signature: <code class="prettyprint">zwVsqm6VhEGzFhqBQM+zzvh/PJ8=</code></li>
+</ol>
+
+<p>Expected value of <code class="prettyprint">Authorization</code> header:</p>
+
+<p><code class="prettyprint">droplr ZmFtaWx5X2FwcDpxdWFnbWlyZUBkcm9wbHIuY29t:zwVsqm6VhEGzFhqBQM+zzvh/PJ8=</code></p>
+
+<h2 id="data-formats">Data Formats</h2>
+
+<p>You&rsquo;ll need to provide an input for many of the operations against the Droplr API servers, and most operations will also return an output.</p>
+
+<p>Two types of output are supported:</p>
+
+<ul>
+<li>Custom headers (from here on referred to as HEADERS, which are headers with the prefix <code class="prettyprint">x-droplr-*</code>)</li>
+<li>JSON</li>
+</ul>
+
+<p>Whenever possible, clients should use the HEADERS output format. It&rsquo;s lighter for both the server and the client because there is no need for encoding/decoding the contents.</p>
+
+<p>While HEADERS format is perfect for conveying data on a single record it is inadequate for large and/or multi-record responses. This means that some actions, given the nature of their responses, are not available with HEADERS format &ndash; as is the case with list operations.</p>
+
+<p>The choice of output format is done by appending a dot (<code class="prettyprint">.</code>) followed by the desired format at the end of the request URI. For the default, HEADERS format, however, nothing is appended.</p>
+
+<p>Examples:</p>
+
+<ul>
+<li><code class="prettyprint">/drops/xkcd.json</code> (JSON)</li>
+<li><code class="prettyprint">/drops/xkcd</code> (HEADERS)</li>
+</ul>
+
+<h3 id="input-amp-output-coherence">Input &amp; Output Coherence</h3>
+
+<blockquote>
+<p>HEADERS Output Format</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="c"># Request (partial):</span>
+
+POST /note HTTP/1.1
+...
+<span class="o">(</span>request body<span class="o">)</span>
+
+<span class="c"># Response (partial):</span>
+
+HTTP/1.1 200 OK
+x-droplr-code: xkcd
+x-droplr-uploadsize: 69
+x-droplr-availablespace: 1000
+x-droplr-usedspace: 169
+...
+Content-Length: 0
+</code></pre>
+
+<blockquote>
+<p>JSON Output Format</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="c"># Request (partial):</span>
+
+POST /note.json HTTP/1.1
+...
+Content-Type: application/json
+Content-Length: 461
+...
+<span class="o">(</span>request body<span class="o">)</span>
+
+<span class="c"># Response:</span>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 78
+
+<span class="o">{</span><span class="s2">"totalSpace"</span>:1073741824,<span class="s2">"usedSpace"</span>:1400519,<span class="s2">"uploadSize"</span>:461,<span class="s2">"code"</span>:<span class="s2">"xkcd"</span>, ...<span class="o">}</span>
+</code></pre>
+
+<blockquote>
+<p>JSON Output Format with Query Input</p>
+</blockquote>
+<pre class="highlight shell"><code><span class="c"># Request (partial):</span>
+
+GET /drops.json?offset<span class="o">=</span>0&amp;amount<span class="o">=</span>10 HTTP/1.1
+...
+Content-Length: 0
+
+<span class="c"># Response:</span>
+
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 78
+
+<span class="o">{</span><span class="s2">"totalSpace"</span>:1073741824,<span class="s2">"usedSpace"</span>:1400519,<span class="s2">"uploadSize"</span>:461,<span class="s2">"code"</span>:<span class="s2">"xkcd"</span>, ...<span class="o">}</span>
+</code></pre>
+
+<p>When executing an operation, keep in mind that the server will give output according to the input. If you access the operation <code class="prettyprint">GET /drops/xkcd</code>, the server expects you to provide input using the HEADERS format and will provide output with the HEADERS format. Unless explicitly noted, data format permutations cannot occur; for example, you can&rsquo;t execute <code class="prettyprint">GET /drops/xkcd</code> with input in HEADERS format and receive data in JSON format.</p>
+
+<p>There are, however, HTTP client libraries that will not allow you to send data along in a GET request. In order to overcome this limitation, all JSON operations that support or require input parameters will also support query parameter input:</p>
+
+<p><code class="prettyprint">GET /drops.json?offset=0&amp;amount=10 HTTP/1.1</code></p>
+
+<p>The following examples illustrate the differences between these output formats for the example of a note upload.</p>
+
+<aside class="notice">
+  Requests in the HEADERS format do not require the format type to be appended at the end of the URI (as is the case with all other formats).
+</aside>
+
+<h2 id="actions">Actions</h2>
+
+<h3 id="introduction">Introduction</h3>
+
+<p>Droplr&rsquo;s API consists of several RESTful operations to create, read and delete drops as well as operations to manage user accounts.</p>
+
+<p>This document provides an extensive listing of these operations, along with their input &amp; output parameters, supported <a href="#data-formats">formats</a>, and special notes.</p>
+
+<h4 id="environments-and-encryption">Environments and Encryption</h4>
+
+<p>Before any application is authorized to hit the production servers, it must go through a staging period on the development environments.</p>
+
+<p>Server endpoints:</p>
+
+<ul>
+<li><strong>Production</strong>: https://api.droplr.com (port 443)</li>
+<li><strong>Development</strong>: http://dev.droplr.com (port 8069)</li>
+</ul>
+
+<p>While encrypted HTTP connections are optional on the development environment, they are mandatory for the production environment &ndash; which doesn&rsquo;t even support non-encrypted connections.</p>
+
+<h4 id="operation-errors">Operation Errors</h4>
+<pre class="highlight shell"><code><span class="c"># Example error response</span>
+
+HTTP/1.1 401 Unauthorized
+...
+x-droplr-errorcode: Authentication.UnknownUser
+x-droplr-errordetails: No such user
+</code></pre>
+
+<p>The server will use traditional HTTP status codes to convey operation errors or success. However, these are somewhat limited and do not offer a precise cause for the operation failure.</p>
+
+<p>Whenever an operation fails (HTTP status code &gt;= 400), the server will include two headers:</p>
+
+<ul>
+<li><p><strong>Error code:</strong> Contains a unique identifier for the cause of the error. It is usually in the format X.Y, X being the high-level action and Y the error identifier, within X. It can be found on the header <code class="prettyprint">x-droplr-errorcode</code>.</p></li>
+<li><p><strong>Error details:</strong> Contains a user-friendly english (<code class="prettyprint">en-US</code>) message that can be displayed to the user of the app. It can be found on the header <code class="prettyprint">x-droplr-errordetails</code>.</p></li>
+</ul>
+
+<h4 id="error-internationalization">Error Internationalization</h4>
+<pre class="highlight shell"><code><span class="o">[</span>English dictionary]
+<span class="o">(</span>K: Authentication.UnknownUser, V: <span class="s2">"There is no such user"</span><span class="o">)</span>
+
+<span class="o">[</span>Portuguese dictionary]
+<span class="o">(</span>K: Authentication.UnknownUser, V: <span class="s2">"O utilizador não existe"</span><span class="o">)</span>
+</code></pre>
+
+<p>The <code class="prettyprint">error code</code> property is useful to internationalize your application. By creating multiple dictionaries (also commonly referred to as &lsquo;map&rsquo;) where the keys are all the values for the <code class="prettyprint">error code</code> property and the values are translations, you can show your users a detailed localized message for every error that happens when interacting with the Droplr server.</p>
+
+<h4 id="setting-a-meaningful-user-agent-header-value">Setting a Meaningful User-Agent Header Value</h4>
+
+<p>Each application will be uniquely defined by its public key, which will be present in the signature it sends with each request (the value of the <code class="prettyprint">Authorization</code> header). This identifier will always be the same even though the application version will likely change over time.</p>
+
+<p>In order for Droplr&rsquo;s API servers to be able to distinguish between different versions of the same application, the <code class="prettyprint">User-Agent</code> header should be set with a meaningful value.</p>
+
+<p>A common and useful pattern is:</p>
+
+<p><code class="prettyprint">User-Agent: &lt;Network library name&gt;/&lt;major.minor(.build)&gt; &lt;App name&gt;/&lt;major.minor(.build)&gt;</code></p>
+
+<p>As an example, Droplr&rsquo;s Mac app using <code class="prettyprint">DroplrKit</code> would have the following user agent:</p>
+
+<p><code class="prettyprint">User-Agent: DroplrService.objc/1.0 DroplrMac/2.0.5</code></p>
+
+<p>This is merely an example; what matters is that at least the application version should always be present on this header. Droplr&rsquo;s API servers have user agent blacklisting which will be used if erratic behavior is detected by a specific version of an application &ndash; the server will reply with a message telling the client to upgrade to the latest version.</p>
+
+<p>If the application does not update its <code class="prettyprint">User-Agent</code> header according to its version, multiple versions may end up being blocked.</p>
+
+<p>If you&rsquo;re develping an SDK that abstracts the network communication with Droplr&rsquo;s API Servers, your library should offer its users the possibility to append information about their application. For instance, <code class="prettyprint">DroplrKit</code> always sends its name and version but requires each application to provide its own identification string.</p>
+
+<p><code class="prettyprint">DroplrService.objc/1.0 %APP_IDENTIFIER%</code></p>
+
+<h4 id="drop-creation-operations">Drop Creation Operations</h4>
+
+<p>Droplr&rsquo;s API server fully supports the 100-Continue header (RFC <em>TODO</em>). If possible, your client should implement this directive, as it&rsquo;ll save both time and bandwidth.</p>
+
+<p>In short, The <code class="prettyprint">100-Continue</code> is a value for the <code class="prettyprint">Expect</code> header sent by the client when uploading data. When this header is set, the client will send the request headers and wait for a provisional response from the server (an <code class="prettyprint">HTTP 100 Continue</code> response) before actually sending the data. This will enable the Droplr API Server to properly validate the request before receiving data and prepare to accomodate the incoming file.</p>
+
+<p>Most modern HTTP implementations support this feature out of the box by simply setting the value <code class="prettyprint">100-Continue</code> on the <code class="prettyprint">Expects</code> header or via some other well-known request property.</p>
+
+<p>When this feature is not used and the upload does not pass validation, it will be interrupted before all the data is sent through. This will likely cause problems with faulty HTTP implementations.</p>
+
+<h4 id="drop-privacy">Drop Privacy</h4>
+
+<p>Droplr supports three privacy modes, which reflects how drops are visible via their codes.</p>
+
+<aside class="notice">
+  Drop privacy concerns only non-owner viewers of the drop so your application does not need any special handling when performing operations, such as <strong>Read drop</strong> or <strong>List drops</strong>. Drop privacy is used by Droplr&rsquo;s webapp to determine how to display (or how <em>not</em> to display) a given drop.
+</aside>
+
+<p>No matter what the privacy mode is upon its creation, the drop will <em>always</em> have default values for all the fields mentioned in the sections below (<strong>short code</strong>, <strong>obscure code</strong> and <strong>password</strong>). Beware that older drops (pre-privacy era) may not include <strong>password</strong> field when retrieved so never assume password is always present.</p>
+
+<h5 id="public">Public</h5>
+
+<p>This is the default mode, reflected by the value <code class="prettyprint">PUBLIC</code> in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
+
+<p>Drops configured as <code class="prettyprint">PUBLIC</code> are accessible either by their <strong>short code</strong> (e.g. <code class="prettyprint">http://d.pr/xkcd</code>) or their <strong>obscure code</strong> (covered up next).</p>
+
+<p>No special handling is required and apps may use the value of the shortlink field (<code class="prettyprint">shortlink</code> JSON field or <code class="prettyprint">x-droplr-shortlink</code>) in a drop directly.</p>
+
+<p><strong>Short code</strong> is an alphanumeric string that fits the pattern <code class="prettyprint">[a-zA-Z0-9]+</code>.</p>
+
+<h5 id="obscure">Obscure</h5>
+
+<p>When a drop is configured to use its obscure code, it will only be accessible by its 16-char-long code, thus making it significantly harder to guess. A drop must be handled as obscure when the value <code class="prettyprint">OBSCURE</code> is present in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
+
+<p>Drops configured as <code class="prettyprint">OBSCURE</code> are accessible <em>only</em> by their <strong>obscure code</strong> (e.g.: <code class="prettyprint">http://d.pr/aF03GzuIqL0OeXsA</code>) and will return 404 (<code class="prettyprint">Not found</code>) if someone tries to access them with their <strong>short code</strong>.</p>
+
+<p>Since the server will automatically use the <strong>obscure code</strong> in the shortlink field (<code class="prettyprint">shortlink</code> JSON field or <code class="prettyprint">x-droplr-shortlink</code> Custom HTTP header) when returning drops, no special handling is required and applications may use this value directly.</p>
+
+<p><strong>Obscure code</strong> is an alphanumeric string that fits the pattern <code class="prettyprint">[a-zA-Z0-9]{16}</code>.</p>
+
+<h5 id="private">Private</h5>
+
+<p>Drops configured as private can either be viewed by their <strong>short code</strong> or their <strong>obscure code</strong> but will always require a password to be viewed. A drop must be handled as private when the value <code class="prettyprint">PRIVATE</code> is present in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
+
+<p>When configured to private mode, the server will use the <strong>short code</strong> in the shortlink field (<code class="prettyprint">shortlink</code> JSON field or <code class="prettyprint">x-droplr-shortlink</code>) when returning drops, but in order for the shortlink to be directly accessibly (i.e. copy+paste accessible) you must append a forward-slash and the value of the password field (<code class="prettyprint">password</code> JSON field or <code class="prettyprint">x-droplr-password</code> Custom HTTP header).</p>
+
+<p>For instance, a drop with <strong>short code</strong> <code class="prettyprint">xkcd</code> and <strong>password</strong> <code class="prettyprint">verySafePassword</code> would have its shortlink returned as <code class="prettyprint">http://d.pr/xkcd</code> and would be directly accessible with <code class="prettyprint">http://d.pr/xkcd/verySafePassword</code>.</p>
 
       </div>
       <div class="dark-box">
-          <div class="lang-selector">
-                <a href="#" data-language-name="shell">shell</a>
-                <a href="#" data-language-name="ruby">ruby</a>
-                <a href="#" data-language-name="python">python</a>
-          </div>
       </div>
     </div>
   </body>

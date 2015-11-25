@@ -740,28 +740,36 @@ html, body {
     .tocify-wrapper .tocify-subheader .tocify-item > a {
       padding-left: 25px;
       font-size: 12px; }
-    /* line 195, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 193, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    .tocify-wrapper .tocify-subheader .tocify-subheader .tocify-item > a {
+      padding-left: 35px;
+      font-size: 12px; }
+    /* line 198, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    .tocify-wrapper .tocify-subheader .tocify-subheader .tocify-subheader .tocify-item > a {
+      padding-left: 45px;
+      font-size: 12px; }
+    /* line 206, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .tocify-wrapper .tocify-subheader > li:last-child {
       box-shadow: none; }
-  /* line 200, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 211, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .tocify-wrapper .toc-footer {
     padding: 1em 0;
     margin-top: 1em;
     border-top: 1px dashed #666; }
-    /* line 205, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 216, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer li, .tocify-wrapper .toc-footer a {
       color: #fff;
       text-decoration: none; }
-    /* line 210, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 221, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer a:hover {
       text-decoration: underline; }
-    /* line 214, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 225, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .tocify-wrapper .toc-footer li {
       font-size: 0.8em;
       line-height: 1.7;
       text-decoration: none; }
 
-/* line 224, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 235, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 #nav-button {
   padding: 0 1.5em 5em 0;
   display: none;
@@ -775,7 +783,7 @@ html, body {
   opacity: 0.7;
   line-height: 16px;
   transition: left 0.3s ease-in-out; }
-  /* line 225, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 236, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   #nav-button span {
     display: block;
     padding: 6px 6px 6px;
@@ -785,18 +793,18 @@ html, body {
     -webkit-transform: rotate(-90deg) translate(-100%, 0);
     transform: rotate(-90deg) translate(-100%, 0);
     border-radius: 0 0 0 5px; }
-  /* line 245, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 256, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   #nav-button img {
     height: 16px;
     vertical-align: bottom; }
-  /* line 252, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 263, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   #nav-button:hover {
     opacity: 1; }
-  /* line 253, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 264, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   #nav-button.open {
     left: 230px; }
 
-/* line 261, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 272, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 .page-wrapper {
   margin-left: 230px;
   position: relative;
@@ -804,7 +812,7 @@ html, body {
   background-color: #eaf2f6;
   min-height: 100%;
   padding-bottom: 1px; }
-  /* line 275, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 286, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .page-wrapper .dark-box {
     width: 50%;
     background-color: #393939;
@@ -812,18 +820,18 @@ html, body {
     right: 0;
     top: 0;
     bottom: 0; }
-  /* line 284, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 295, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .page-wrapper .lang-selector {
     position: fixed;
     z-index: 50;
     border-bottom: 5px solid #393939; }
 
-/* line 291, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 302, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 .lang-selector {
   background-color: #222;
   width: 100%;
   font-weight: bold; }
-  /* line 295, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 306, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .lang-selector a {
     display: block;
     float: left;
@@ -832,43 +840,43 @@ html, body {
     padding: 0 10px;
     line-height: 30px;
     outline: 0; }
-    /* line 304, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 315, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .lang-selector a:active, .lang-selector a:focus {
       background-color: #111;
       color: #fff; }
-    /* line 309, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 320, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .lang-selector a.active {
       background-color: #393939;
       color: #fff; }
-  /* line 315, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 326, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .lang-selector:after {
     content: '';
     clear: both;
     display: block; }
 
-/* line 327, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 338, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 .content {
   position: relative;
   z-index: 30; }
-  /* line 332, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 343, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content:after {
     content: '';
     display: block;
     clear: both; }
-  /* line 338, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 349, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > h3, .content > h4, .content > h5, .content > h6, .content > p, .content > table, .content > ul, .content > ol, .content > aside, .content > dl {
     margin-right: 50%;
     padding: 0 28px;
     box-sizing: border-box;
     display: block;
     text-shadow: 0px 1px 0px #fff; }
-  /* line 348, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 359, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content > ul, .content > ol {
     padding-left: 43px; }
-  /* line 353, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 364, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > div {
     clear: both; }
-  /* line 357, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 368, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h1 {
     font-size: 30px;
     padding-top: 0.5em;
@@ -878,11 +886,11 @@ html, body {
     margin-top: 2em;
     border-top: 1px solid #ddd;
     background-image: linear-gradient(to bottom, #ffffff, #f9f9f9); }
-  /* line 369, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 380, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h1:first-child, .content div:first-child + h1 {
     border-top-width: 0;
     margin-top: 0; }
-  /* line 374, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 385, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h2 {
     font-size: 20px;
     margin-top: 4em;
@@ -891,72 +899,72 @@ html, body {
     padding-top: 1.2em;
     padding-bottom: 1.2em;
     background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0)); }
-  /* line 387, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 398, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h1 + h2, .content h1 + div + h2 {
     margin-top: -21px;
     border-top: none; }
-  /* line 392, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 403, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h3, .content h4, .content h5, .content h6 {
     font-size: 15px;
     margin-top: 2.5em;
     margin-bottom: 0.8em; }
-  /* line 399, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 410, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content h4, .content h5, .content h6 {
     font-size: 10px; }
-  /* line 403, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 414, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content hr {
     margin: 2em 0;
     border-top: 2px solid #393939;
     border-bottom: 2px solid #eaf2f6; }
-  /* line 409, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 420, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content table {
     margin-bottom: 1em;
     overflow: auto; }
-    /* line 412, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 423, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table th, .content table td {
       text-align: left;
       vertical-align: top;
       line-height: 1.6; }
-    /* line 418, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 429, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table th {
       padding: 5px 10px;
       border-bottom: 1px solid #ccc;
       vertical-align: bottom; }
-    /* line 424, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 435, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table td {
       padding: 10px; }
-    /* line 428, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 439, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table tr:last-child {
       border-bottom: 1px solid #ccc; }
-    /* line 432, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 443, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table tr:nth-child(odd) > td {
       background-color: #f9fbfc; }
-    /* line 436, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 447, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content table tr:nth-child(even) > td {
       background-color: #f3f7fa; }
-  /* line 441, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 452, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content dt {
     font-weight: bold; }
-  /* line 445, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 456, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content dd {
     margin-left: 15px; }
-  /* line 449, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 460, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content p, .content li, .content dt, .content dd {
     line-height: 1.6;
     margin-top: 0; }
-  /* line 454, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 465, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content img {
     max-width: 100%; }
-  /* line 458, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 469, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content code {
     background-color: rgba(0, 0, 0, 0.05);
     padding: 3px;
     border-radius: 3px; }
-  /* line 466, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 477, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content pre > code {
     background-color: transparent;
     padding: 0; }
-  /* line 471, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 482, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content aside {
     padding-top: 1em;
     padding-bottom: 1em;
@@ -965,20 +973,20 @@ html, body {
     margin-bottom: 1.5em;
     background: #8fbcd4;
     line-height: 1.6; }
-    /* line 480, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 491, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content aside.warning {
       background-color: #c97a7e;
       text-shadow: 0 1px 0 #dfb0b3; }
-    /* line 485, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 496, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .content aside.success {
       background-color: #6ac174;
       text-shadow: 0 1px 0 #a0d7a6; }
-  /* line 491, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 502, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content aside:before {
     vertical-align: middle;
     padding-right: 0.5em;
     font-size: 14px; }
-  /* line 509, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 520, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content .search-highlight {
     padding: 2px;
     margin: -2px;
@@ -987,7 +995,7 @@ html, body {
     text-shadow: 1px 1px 0 #666;
     background: linear-gradient(to top left, #f7e633 0%, #f1d32f 100%); }
 
-/* line 525, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 536, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 .content pre, .content blockquote {
   background-color: #292929;
   color: #fff;
@@ -998,15 +1006,15 @@ html, body {
   clear: right;
   box-sizing: border-box;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4); }
-  /* line 541, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 552, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content pre > p, .content blockquote > p {
     margin: 0; }
-  /* line 543, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 554, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content pre a, .content blockquote a {
     color: #fff;
     text-decoration: none;
     border-bottom: dashed 1px #ccc; }
-/* line 555, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+/* line 566, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
 .content blockquote > p {
   background-color: #1c1c1c;
   border-radius: 5px;
@@ -1016,47 +1024,47 @@ html, body {
   border-bottom: 1px solid #404040; }
 
 @media (max-width: 930px) {
-  /* line 573, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 584, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .tocify-wrapper {
     left: -230px; }
-    /* line 576, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+    /* line 587, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
     .tocify-wrapper.open {
       left: 0; }
 
-  /* line 581, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 592, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .page-wrapper {
     margin-left: 0; }
 
-  /* line 585, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 596, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   #nav-button {
     display: block; }
 
-  /* line 589, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 600, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .tocify-wrapper .tocify-item > a {
     padding-top: 0.3em;
     padding-bottom: 0.3em; } }
 @media (max-width: 700px) {
-  /* line 596, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 607, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .dark-box {
     display: none; }
 
-  /* line 600, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 611, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content > h1, .content > h2, .content > h3, .content > h4, .content > h5, .content > h6, .content > p, .content > table, .content > ul, .content > ol, .content > aside, .content > dl {
     margin-right: 0; }
 
-  /* line 604, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 615, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .tocify-wrapper .lang-selector {
     display: block; }
 
-  /* line 608, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 619, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .page-wrapper .lang-selector {
     display: none; }
 
-  /* line 612, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 623, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content pre, .content blockquote {
     width: auto;
     float: none; }
 
-  /* line 617, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
+  /* line 628, /Users/nickbernard/code/droplr/docs/source/stylesheets/screen.css.scss */
   .content > pre + h1, .content > blockquote + h1, .content > pre + h2, .content > blockquote + h2, .content > pre + h3, .content > blockquote + h3, .content > pre + h4, .content > blockquote + h4, .content > pre + h5, .content > blockquote + h5, .content > pre + h6, .content > blockquote + h6, .content > pre + p, .content > blockquote + p, .content > pre + table, .content > blockquote + table, .content > pre + ul, .content > blockquote + ul, .content > pre + ol, .content > blockquote + ol, .content > pre + aside, .content > blockquote + aside, .content > pre + dl, .content > blockquote + dl {
     margin-top: 28px; } }

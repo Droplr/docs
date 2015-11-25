@@ -1962,7 +1962,7 @@ under the License.
 
   var makeToc = function() {
     global.toc = $("#toc").tocify({
-      selectors: 'h1, h2',
+      selectors: 'h1, h2, h3, h4',
       extendPage: false,
       theme: 'none',
       smoothScroll: false,
