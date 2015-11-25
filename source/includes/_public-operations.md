@@ -900,3 +900,55 @@ Error Code | Status Code | Cause | Error Message
 ##### Notes
 
 * This action will only delete drops created by the user account whose credentials were used to authenticate the request.
+
+
+### Read Account Details
+
+>Example Request
+
+```
+GET /account HTTP/1.1
+```
+
+> Example Response
+
+```json
+{
+  "key":"value"
+}
+```
+
+* **Description:** Retrieve information of a given account
+* **URI:** `/account`
+* **Method:** `GET`
+* **Supported formats:** HEADERS, JSON
+
+
+##### Input Parameters
+
+N/A
+
+
+##### Output Parameters
+
+Parameter | Description | Header Key | JSON Field
+--------- | ----------- | ---------- | ---------- |
+**User id** | The unique user id assigned to this account. | `x-droplr-id` | `id` 
+**Created at** | The POSIX timestamp (in milliseconds) when this account was created. | `x-droplr-createdat` | `createdAt`
+**Type** | The type of account (PRO, REGULAR). | `x-droplr-type` | `type`
+**Subscription end** | The exact date of the Pro subscription expiration, in milliseconds elapsed since UTC. This value will be present if **Type** is `PRO`. | `x-droplr-subscriptionend` | `subscriptionEnd`
+**Max upload size** | The maximum size for file uploads, depends on user account. Applications should use this value to test whether an upload can be performed before performing the upload. | `x-droplr-maxuploadsize` | `uploadSize`
+**Used space** | The total used space by this user. | `x-droplr-usedspace` | `usedSpace`
+**Email** | The user's current email. | `x-droplr-email` | `email`
+**Use custom domain** | A flag that indicates what type of domain should be used (if **Custom domain** property is set). | `x-droplr-domaintype` | `domainType`
+**Custom domain** | A custom domain to use when returning shortlinks for drops, if the **Use custom domain** flag is set. | `x-droplr-domain` | `domain`
+**Use root redirect** | A flag that indicates whether root redirects should be used when hitting the custom domain without a drop code. This property only makes sense if both **Custom domain** and **Root redirect** properties are set. | `x-droplr-userootredirect` | `useRootRedirect`
+**Root redirect** | Where to redirect HTTP requests to the custom domain (**Custom domain** property). | `x-droplr-rootredirect` | `rootRedirect`
+**Drop privacy** | The privacy setting with which new drops will be created. Acceptable values are `PUBLIC`, `PRIVATE` and `OBSCURE`. | `x-droplr-dropprivacy` | `dropPrivacy`
+**Theme** | The theme to use on Droplr's website. This is a free-form string but typical values are 'default', 'light' and 'dark'. If the value is not recognized, the default theme will be used. Your application can also rely on this value to change its appearance. | `x-droplr-theme` | `theme`
+**Drop count** | The number of drops created by this user. | `x-droplr-dropcount` | `dropCount` 
+
+
+##### Notes
+
+* The account that's read is the one whose credentials are provided in the authentication header.
