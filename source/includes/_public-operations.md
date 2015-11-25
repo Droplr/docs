@@ -238,9 +238,135 @@ There are, however, HTTP client libraries that will not allow you to send data a
 
 `GET /drops.json?offset=0&amount=10 HTTP/1.1`
 
-The following sub-sections illustrate the differences between these output formats for the example of a note upload.
+The following examples illustrate the differences between these output formats for the example of a note upload.
 
 <aside class="notice">
   Requests in the HEADERS format do not require the format type to be appended at the end of the URI (as is the case with all other formats).
 </aside>
 
+
+## Actions
+
+### Introduction
+
+Droplr's API consists of several RESTful operations to create, read and delete drops as well as operations to manage user accounts.
+
+This document provides an extensive listing of these operations, along with their input & output parameters, supported [formats](#data-formats), and special notes.
+
+
+#### Environments and Encryption
+
+Before any application is authorized to hit the production servers, it must go through a staging period on the development environments.
+
+Server endpoints:
+
+* **Production**: https://api.droplr.com (port 443)
+* **Development**: http://dev.droplr.com (port 8069)
+
+While encrypted HTTP connections are optional on the development environment, they are mandatory for the production environment -- which doesn't even support non-encrypted connections.
+
+
+#### Operation Errors
+
+```shell
+# Example error response
+
+HTTP/1.1 401 Unauthorized
+...
+x-droplr-errorcode: Authentication.UnknownUser
+x-droplr-errordetails: No such user
+```
+
+The server will use traditional HTTP status codes to convey operation errors or success. However, these are somewhat limited and do not offer a precise cause for the operation failure.
+
+Whenever an operation fails (HTTP status code >= 400), the server will include two headers:
+
+* **Error code:** Contains a unique identifier for the cause of the error. It is usually in the format X.Y, X being the high-level action and Y the error identifier, within X. It can be found on the header `x-droplr-errorcode`.
+
+* **Error details:** Contains a user-friendly english (`en-US`) message that can be displayed to the user of the app. It can be found on the header `x-droplr-errordetails`.
+
+
+#### Error Internationalization
+
+```shell
+[English dictionary]
+(K: Authentication.UnknownUser, V: "There is no such user")
+
+[Portuguese dictionary]
+(K: Authentication.UnknownUser, V: "O utilizador não existe")
+```
+
+The `error code` property is useful to internationalize your application. By creating multiple dictionaries (also commonly referred to as 'map') where the keys are all the values for the `error code` property and the values are translations, you can show your users a detailed localized message for every error that happens when interacting with the Droplr server.
+
+
+#### Setting a Meaningful User-Agent Header Value
+
+Each application will be uniquely defined by its public key, which will be present in the signature it sends with each request (the value of the `Authorization` header). This identifier will always be the same even though the application version will likely change over time.
+
+In order for Droplr's API servers to be able to distinguish between different versions of the same application, the `User-Agent` header should be set with a meaningful value.
+
+A common and useful pattern is:
+
+`User-Agent: <Network library name>/<major.minor(.build)> <App name>/<major.minor(.build)>`
+
+As an example, Droplr's Mac app using `DroplrKit` would have the following user agent:
+
+`User-Agent: DroplrService.objc/1.0 DroplrMac/2.0.5`
+
+This is merely an example; what matters is that at least the application version should always be present on this header. Droplr's API servers have user agent blacklisting which will be used if erratic behavior is detected by a specific version of an application -- the server will reply with a message telling the client to upgrade to the latest version.
+
+If the application does not update its `User-Agent` header according to its version, multiple versions may end up being blocked.
+
+If you're develping an SDK that abstracts the network communication with Droplr's API Servers, your library should offer its users the possibility to append information about their application. For instance, `DroplrKit` always sends its name and version but requires each application to provide its own identification string.
+
+`DroplrService.objc/1.0 %APP_IDENTIFIER%`
+
+
+#### Drop Creation Operations
+
+Droplr's API server fully supports the 100-Continue header (RFC *TODO*). If possible, your client should implement this directive, as it'll save both time and bandwidth.
+
+In short, The `100-Continue` is a value for the `Expect` header sent by the client when uploading data. When this header is set, the client will send the request headers and wait for a provisional response from the server (an `HTTP 100 Continue` response) before actually sending the data. This will enable the Droplr API Server to properly validate the request before receiving data and prepare to accomodate the incoming file.
+
+Most modern HTTP implementations support this feature out of the box by simply setting the value `100-Continue` on the `Expects` header or via some other well-known request property.
+
+When this feature is not used and the upload does not pass validation, it will be interrupted before all the data is sent through. This will likely cause problems with faulty HTTP implementations.
+
+
+#### Drop Privacy
+
+Droplr supports three privacy modes, which reflects how drops are visible via their codes.
+
+<aside class="notice">
+  Drop privacy concerns only non-owner viewers of the drop so your application does not need any special handling when performing operations, such as <strong>Read drop</strong> or <strong>List drops</strong>. Drop privacy is used by Droplr's webapp to determine how to display (or how <em>not</em> to display) a given drop.
+</aside>
+
+No matter what the privacy mode is upon its creation, the drop will *always* have default values for all the fields mentioned in the sections below (**short code**, **obscure code** and **password**). Beware that older drops (pre-privacy era) may not include **password** field when retrieved so never assume password is always present.
+
+##### Public
+
+This is the default mode, reflected by the value `PUBLIC` in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
+
+Drops configured as `PUBLIC` are accessible either by their **short code** (e.g. `http://d.pr/xkcd`) or their **obscure code** (covered up next).
+
+No special handling is required and apps may use the value of the shortlink field (`shortlink` JSON field or `x-droplr-shortlink`) in a drop directly.
+
+**Short code** is an alphanumeric string that fits the pattern `[a-zA-Z0-9]+`.
+
+##### Obscure
+
+When a drop is configured to use its obscure code, it will only be accessible by its 16-char-long code, thus making it significantly harder to guess. A drop must be handled as obscure when the value `OBSCURE` is present in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
+
+Drops configured as `OBSCURE` are accessible *only* by their **obscure code** (e.g.: `http://d.pr/aF03GzuIqL0OeXsA`) and will return 404 (`Not found`) if someone tries to access them with their **short code**.
+
+Since the server will automatically use the **obscure code** in the shortlink field (`shortlink` JSON field or `x-droplr-shortlink` Custom HTTP header) when returning drops, no special handling is required and applications may use this value directly.
+
+**Obscure code** is an alphanumeric string that fits the pattern `[a-zA-Z0-9]{16}`.
+
+##### Private
+
+Drops configured as private can either be viewed by their **short code** or their **obscure code** but will always require a password to be viewed. A drop must be handled as private when the value `PRIVATE` is present in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
+
+When configured to private mode, the server will use the **short code** in the shortlink field (`shortlink` JSON field or `x-droplr-shortlink`) when returning drops, but in order for the shortlink to be directly accessibly (i.e. copy+paste accessible) you must append a forward-slash and the value of the password field (`password` JSON field or `x-droplr-password` Custom HTTP header).
+
+For instance, a drop with **short code** `xkcd` and **password** `verySafePassword` would have its shortlink returned as `http://d.pr/xkcd` and would be directly accessible with `http://d.pr/xkcd/verySafePassword`.
