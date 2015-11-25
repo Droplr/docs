@@ -767,3 +767,98 @@ Error Code | Status Code | Cause | Error Message
 
 * Drops can only be read by their creators. If you request details on a drop not owned by the credentials with which you sign the request, the server will return an unauthorized response.
 
+
+### List Drops
+
+>Example Request
+
+```json
+{
+  "startIndex":10,
+  "amount":10,
+  "type":"link"
+}
+
+{
+  "since":1299648278321
+}
+
+{
+  "until":1299648278321,
+  "sortBy":"VIEWS",
+  "order":"ASC"
+}
+```
+
+>Example Response
+
+```
+HTTP/1.1 200 OK
+Content-Type: application/json; encoding=utf-8
+Content-Length: ...
+```
+
+```json
+[
+  {
+    "content":"http://redis.io",
+    "title":"http://redis.io",
+    "obscureCode":"POxqReCZlYk14iN6",
+    "views":0,
+    "createdAt":1333505121880,
+    "privacy":"PUBLIC",
+    "lastAccess":1333505121880,
+    "code":"xkcd",
+    "type":"LINK",
+    "shortlink":"http://d.pr/xkcd",
+    "size":15
+  },
+  {
+    "content":"a very long note that will be truncate...",
+    "title":"a note",
+    "obscureCode":"XslQ13B12Qk14DN6",
+    "views":14,
+    "createdAt":1333505161880,
+    "privacy":"PRIVATE",
+    "password":"lePass",
+    "lastAccess":1333505121880,
+    "code":"xkce",
+    "type":"NOTE",
+    "variant":"plain",
+    "shortlink":"http://d.pr/xkce",
+    "size":1500
+  }
+]
+```
+
+* **Description:** Retrieve a list of previously created drops with the possibility to combine filters
+* **URI:** `/drops`
+* **Method:** `GET`
+* **Supported formats:** JSON
+
+
+##### Input Parameters
+
+Parameter | Description | Header Key | Query Parameter
+--------- | ----------- | ---------- | --------------- |
+**Offset (optional, defaults to 0)** | The drop index at which the list should start. Useful for pagination, the meaning of index zero depends on the sort order (which defaults to latest-drops-first). See the **Order** parameter. | `offset` | `offset`
+**Amount (optional, defaults to 10)** | The amount of drops to retrieve. This value will be capped by the server if too many drops are requested. | `amount` | `amount`
+**Type (optional, defaults to ALL)** | Filter by type of drop. | `type` | `type`
+**Sort by (optional, defaults to `CREATION`)** | Sort the retrieved drops by this field. | `sortBy` | `sortBy`
+**Order (optional, defaults to `DESC`)** | The order by which drops should be retrieved. | `order` | `order`
+**Since timestamp (optional)** | List all drops created after a given timestamp, in milliseconds elapsed since UTC. | `since` | `since`
+**Until timestamp (optional)** | List all drops created until a given timestamp, in milliseconds elapsed since UTC. | `until` | `until`
+
+
+##### Output Parameters
+
+A list with drop information. Each entry in this list has the same format and parameters as the [read drop](#read-drop) action, except that the content for notes will be truncated (to avoid very large data transfers).
+
+
+##### Notes
+
+* This action will only return drops created by the user account whose credentials were used to authenticate the request.
+* Acceptable values for **Type** input parameter are `LINK`, `NOTE`, `IMAGE`, `AUDIO`, `VIDEO` and `FILE`.
+* Acceptable values for the **Sort by** criteria are `CREATION` (default), `CODE`, `TITLE`, `SIZE`, `ACTIVITY` and `VIEWS`.
+* Acceptable values for the **Sort order** criterial are `ASC` (for ascending) and `DESC` (for descending).
+
