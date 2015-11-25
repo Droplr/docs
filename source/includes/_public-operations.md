@@ -245,16 +245,14 @@ The following examples illustrate the differences between these output formats f
 </aside>
 
 
-## Actions
-
-### Introduction
+## Operations Reference
 
 Droplr's API consists of several RESTful operations to create, read and delete drops as well as operations to manage user accounts.
 
 This document provides an extensive listing of these operations, along with their input & output parameters, supported [formats](#data-formats), and special notes.
 
 
-#### Environments and Encryption
+### Environments and Encryption
 
 Before any application is authorized to hit the production servers, it must go through a staging period on the development environments.
 
@@ -266,7 +264,7 @@ Server endpoints:
 While encrypted HTTP connections are optional on the development environment, they are mandatory for the production environment -- which doesn't even support non-encrypted connections.
 
 
-#### Operation Errors
+### Operation Errors
 
 ```shell
 # Example error response
@@ -285,6 +283,192 @@ Whenever an operation fails (HTTP status code >= 400), the server will include t
 
 * **Error details:** Contains a user-friendly english (`en-US`) message that can be displayed to the user of the app. It can be found on the header `x-droplr-errordetails`.
 
+#### Common Errors
+
+There are a great deal of errors that are common to all operations. The following is a comprehensive list of these errors along with the matching HTTP status code, a description of the cause and the message that is sent in the `x-droplr-errordetails` header.
+
+* **Internal.DataAccessError**
+    * **HTTP status code:** 503 (Service Unavailable)
+    * **Cause:** Temporary failure on Droplr's data storage system.
+    * **Error details message:** "Temporary data access failure when performing operation"
+
+* **Internal.TooManyRequest**
+    * **HTTP status code:** 503 (Service Unavailable)
+    * **Cause:** Server is under extremely heavy load and will discard some requests in order to keep serving a percentage of those.
+    * **Error details message:** "Server is under heavy load; please try again later"
+
+* **Maintenance.GoingDown**
+    * **HTTP status code:** 503 (Service unavailable)
+    * **Cause:** Server is under maintenance and will be shutdown soon.
+    * **Error details message:** "Server will be going down for maintenance shortly"
+
+* **Maintenance.ReadOnly**
+    * **HTTP status code:** 503 (Service unavailable)
+    * **Cause:** Server is under maintenance and only non-idempotent operations (read-only) will be allowed.
+    * **Error details message:** "Server is under maintenance; only read operations will be allowed"
+
+* **Authentication.InvalidAuthHeader**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** Auth header is invalid; please refer to the "Auth & auth" guide.
+    * **Error details message:** "Authorization header format is not in conformity with specification"
+
+* **Authentication.UnknownScheme**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** Authentication scheme is unknown; please refer to the "Auth & auth" guide.
+    * **Error details message:** "Authentication scheme not supported: %SCHEME%"
+
+* **Authentication.InvalidScheme**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** The authentication scheme used was not valid for the requested operation.
+    * **Error details message:** "Authentication scheme not supported for this action"
+
+* **Authentication.InvalidSignature**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** The HMAC-SHA1 signature does not match expected value.
+    * **Error details message:** "HMAC SHA1 signature is invalid"
+
+* **Authentication.ReplayedSignature**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** The signature generated for the request has recently been used. Make sure the value of the *Date* header is being set according to the "Auth & auth" guide.
+    * **Error details message:** "Signature has already been used"
+
+* **Authentication.ClockSkew**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** The client's clock is too far ahead/behind the server's clock.
+    * **Error details message:** "Date in request (%REQUEST_DATE%) is too far ahead/behind the server date (%SERVER_DATE%)"
+
+* **Authentication.UnknownApplication**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** Application does not have credentials to perform operations on the server.
+    * **Error details message:** "No such application"
+
+* **Authentication.UnknownUser**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** User with given identifier does not exist.
+    * **Error details message:** "No such user"
+
+* **Authentication.SignatureMismatch**
+    * **HTTP status code:** 401 (Unauthorized)
+    * **Cause:** Signature is according to spec but result does not match expected. Typically means wrong password.
+    * **Error details message:** "Invalid password"
+
+* **Authorization.NoPrivileges**
+    * **HTTP status code:** 403 (Forbidden)
+    * **Cause:** Application attempted to execute an operation to which it does not have clearance.
+    * **Error details message:** "This application has no permissions to execute this action"
+
+* **Request.InvalidUri**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Malformed uri and/or query parameters on HTTP request line.
+    * **Error details message:** "Invalid uri and/or query params"
+
+* **Request.NoAction**
+    * **HTTP status code:** 404 (Not found)
+    * **Cause:** No operation matching request URI.
+    * **Error details message:** "No action at the requested uri"
+
+* **Request.BodyMustBeEmpty**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** The application sent body for a request that doesn't require body. Server will immediately reply with error and close the connection to avoid unnecessary resource usage.
+    * **Error details message:** "Request body must be empty"
+
+* **Request.NoContentLength**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Client application sent content without specifying a *Content-Lenght* header.
+    * **Error details message:** "This server always requires Content-Length header, even for chunked requests"
+
+* **Request.ContentTooLarge**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Client application specified a value that exceeds the acceptable limits (2GB).
+    * **Error details message:** "Content-Length indicates illegal size (over 2GB)"
+
+* **Request.NoContentType**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Request did not bear a *Content-Type* header, which is mandatory when the request includes a body.
+    * **Error details message:** "Content-Type header is mandatory"
+
+* **Request.ContentLengthMismatch**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Announced content length (on *Content-Length* header) doesn't match actual content length.
+    * **Error details message:** "Mismatch between announced content length and actual readable data"
+
+* **Request.NoDateHeader**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** No *Date* (or *x-droplr-date*) header found on request. This header is always mandatory.
+    * **Error details message:** "No Date header found in request"
+
+* **Request.NoAuthorizationHeader**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** No *Authorization* header found on request. This header is always mandatory.
+    * **Error details message:** "No Authorization header found in request"
+
+* **Request.InvalidJson**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** JSON content in request body could not be correctly decoded.
+    * **Error details message:** "Failed to parse JSON request body"
+
+* **Request.UnsupportedDataFormat**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Client application tried to perform an operation using an invalid data format (e.g. ".xml").
+    * **Error details message:** "Unsupported request data format: %DATA_FORMAT%"
+
+* **Request.NoJson**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Server was expecting JSON content in request body but no content (or non-JSON content) was found.
+    * **Error details message:** "A JSON body is required, along with content Content-Type header set"
+
+* **Request.BadContentType**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Value of the header *Content-Type* is not a valid mime type.
+    * **Error details message:** "Unable to parse Content-Type header value: %CONTENT_TYPE%"
+
+* **Request.ChunksNotAcceptable**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Chunked transfer not acceptable for the requested operation.
+    * **Error details message:** "Chunked requests not accepted for this action"
+
+* **Request.PipelineAbuse**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** Client application exceeded maximum allowed pipelined requests for a single connection.
+    * **Error details message:** "Too many pipelined requests"
+
+* **Request.BlacklistedUserAgent**
+    * **HTTP status code:** 403 (Forbidden)
+    * **Cause:** The client user agent was blacklisted. Blacklisting user agents is an effective way to block a specific version of an application without deleting its access credentials. Your application may be blacklisted if erratic behavior is detected. Since we assume this is a temporary issue, we convey an error message that warns users to update their application to the latest version.
+    * **Error details message:** "Please update to the newest version"
+
+The following errors apply only to drop creation operations (shorten link, create note and upload file).
+
+* **CreateDrop.TooManyUploads**
+    * **HTTP status code:** 503 (Service unavailable)
+    * **Cause:** Too many concurrent uploads and the server needs to reject some in order to maintain an acceptable bandwidth for all uploads.
+    * **Error details message:** "Cannot process your request at this time, please try again later"
+
+* **CreateDrop.MaxSizeExceeded**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** The maximum upload size was exceeded. Drops have a size limit based on type and the user's account
+    * **Error details message:** "Max upload size limit exceeded: %SIZE%"
+
+* **CreateDrop.NoSpace**
+    * **HTTP status code:** 507 (Insufficient Storage)
+    * **Cause:** The user has hit the limits of his account and cannot upload files until he clears out some space.
+    * **Error details message:** "Used %USED% of available %AVAILABLE%"
+
+* **CreateDrop.ContentTypeMustMatch**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** The value in *Content-Type* header does not match any of the values in the content type white list.
+    * **Error details message:** "Content-Type header is mandatory and must match %LIST%"
+
+* **CreateDrop.InvalidPrivacy**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** The value in *privacy* query param or *x-droplr-privacy* custom header is not a valid privacy value.
+    * **Error details message:** "Invalid privacy value"
+
+* **CreateDrop.InvalidPrivacy**
+    * **HTTP status code:** 400 (Bad request)
+    * **Cause:** The value in *password* query param or *x-droplr-password* custom header is not a valid password value; it either has invalid length (too short or too long) or contains invalid characters.
+    * **Error details message:** "Invalid password value"
+
 
 #### Error Internationalization
 
@@ -299,7 +483,7 @@ Whenever an operation fails (HTTP status code >= 400), the server will include t
 The `error code` property is useful to internationalize your application. By creating multiple dictionaries (also commonly referred to as 'map') where the keys are all the values for the `error code` property and the values are translations, you can show your users a detailed localized message for every error that happens when interacting with the Droplr server.
 
 
-#### Setting a Meaningful User-Agent Header Value
+### Setting a Meaningful User-Agent Header Value
 
 Each application will be uniquely defined by its public key, which will be present in the signature it sends with each request (the value of the `Authorization` header). This identifier will always be the same even though the application version will likely change over time.
 
@@ -322,7 +506,7 @@ If you're develping an SDK that abstracts the network communication with Droplr'
 `DroplrService.objc/1.0 %APP_IDENTIFIER%`
 
 
-#### Drop Creation Operations
+### Drop Creation Operations
 
 Droplr's API server fully supports the 100-Continue header (RFC *TODO*). If possible, your client should implement this directive, as it'll save both time and bandwidth.
 
@@ -333,7 +517,7 @@ Most modern HTTP implementations support this feature out of the box by simply s
 When this feature is not used and the upload does not pass validation, it will be interrupted before all the data is sent through. This will likely cause problems with faulty HTTP implementations.
 
 
-#### Drop Privacy
+### Drop Privacy
 
 Droplr supports three privacy modes, which reflects how drops are visible via their codes.
 
@@ -343,7 +527,7 @@ Droplr supports three privacy modes, which reflects how drops are visible via th
 
 No matter what the privacy mode is upon its creation, the drop will *always* have default values for all the fields mentioned in the sections below (**short code**, **obscure code** and **password**). Beware that older drops (pre-privacy era) may not include **password** field when retrieved so never assume password is always present.
 
-##### Public
+#### Public
 
 This is the default mode, reflected by the value `PUBLIC` in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
 
@@ -353,7 +537,7 @@ No special handling is required and apps may use the value of the shortlink fiel
 
 **Short code** is an alphanumeric string that fits the pattern `[a-zA-Z0-9]+`.
 
-##### Obscure
+#### Obscure
 
 When a drop is configured to use its obscure code, it will only be accessible by its 16-char-long code, thus making it significantly harder to guess. A drop must be handled as obscure when the value `OBSCURE` is present in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
 
@@ -363,10 +547,34 @@ Since the server will automatically use the **obscure code** in the shortlink fi
 
 **Obscure code** is an alphanumeric string that fits the pattern `[a-zA-Z0-9]{16}`.
 
-##### Private
+#### Private
 
 Drops configured as private can either be viewed by their **short code** or their **obscure code** but will always require a password to be viewed. A drop must be handled as private when the value `PRIVATE` is present in the `privacy` JSON field or the `x-droplr-privacy` Custom HTTP header.
 
 When configured to private mode, the server will use the **short code** in the shortlink field (`shortlink` JSON field or `x-droplr-shortlink`) when returning drops, but in order for the shortlink to be directly accessibly (i.e. copy+paste accessible) you must append a forward-slash and the value of the password field (`password` JSON field or `x-droplr-password` Custom HTTP header).
 
 For instance, a drop with **short code** `xkcd` and **password** `verySafePassword` would have its shortlink returned as `http://d.pr/xkcd` and would be directly accessible with `http://d.pr/xkcd/verySafePassword`.
+
+<aside class="warning">
+  Thumbnail shortlink modifiers (trailing `-`, `/thumbnail`, `/small` and `/medium`) as well as direct content access modifiers (trailing `+`) follow password-protected drop convetions too! If you were to fetch a thumbnail for an image with code `xkcd` and shortlink `http://d.pr/i/xkcd` by appending a trailing minus sign (`http://d.pr/i/xkcd-`), you would have to use `http://d.pr/i/xkcd/password-` instead.  
+</aside>
+
+If the password is not appended to the shortlink (thus creating an **accessible link**), the viewer will be presented with a screen requiring password input. This may be desired behavior if you wish to send the link for a drop via one transmission medium and the password via another.
+
+**Password** is an alphanumeric string that fits the pattern `[a-zA-Z0-9]{4,32}`, although by default, an 8-char-long password is assigned. The character restriction for the password (alphanumeric chars only) is required to ensure that the drop is always accessible via a valid URL, since special chars would potentially break browser implementations and thus rendering the drop inaccessible.
+
+### Accessible Drop URLs
+
+```
+String accessibleUrl(Drop drop) {
+    switch (drop.privacy) {
+        case "PRIVATE":
+            return drop.shortlink + "/" + drop.password;
+
+        case "PUBLIC":
+        case "OBSCURE":
+        case default:
+            return drop.shortlink;
+}
+```
+With any arbitrary language, assuming `Drop` represents a properly parsed drop response from the server, this algorithm will ensure that an accessible url is generated for a drop.
