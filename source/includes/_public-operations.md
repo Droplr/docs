@@ -862,3 +862,41 @@ A list with drop information. Each entry in this list has the same format and pa
 * Acceptable values for the **Sort by** criteria are `CREATION` (default), `CODE`, `TITLE`, `SIZE`, `ACTIVITY` and `VIEWS`.
 * Acceptable values for the **Sort order** criterial are `ASC` (for ascending) and `DESC` (for descending).
 
+
+### Delete Drop
+
+>Example Request
+
+```
+DELETE /drops/xkcd HTTP/1.1
+
+```
+
+* **Description:** Delete a previously created drop
+* **URI:** `/drops/:code`
+* **Method:** `DELETE`
+* **Supported formats:** HEADERS (there is no output, so defaults to HEADERS)
+
+
+##### Input Parameters
+
+The only input parameter is the drop `code` supplied in the URL; e.g. `DELETE /drops/xkcd`.
+
+
+##### Output Parameters
+
+N/A
+
+
+##### Errors
+
+Error Code | Status Code | Cause | Error Message
+---------- | ----------- | ----- | ------------- |
+**DeleteDrop.NoDrop** | 404 | Drop for specified code does not exist. | No such drop
+**DeleteDrop.NotOwner** | 403 | Request specified a drop for deletion that is not owned by the user whose credentials were used to sign the request. | You're not the owner of that drop
+**DeleteDrop.AlreadyDeleted** | 410 | Request specified a drop for deletion that has already been deleted. | Record already deleted
+
+
+##### Notes
+
+* This action will only delete drops created by the user account whose credentials were used to authenticate the request.
