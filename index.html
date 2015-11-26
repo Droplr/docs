@@ -21,7 +21,7 @@
       </span>
     </a>
     <div class="tocify-wrapper">
-      <img src="images/logo.png" />
+      <div class="logo"></div>
         <div class="search">
           <input type="text" class="search" id="input-search" placeholder="Search">
         </div>
@@ -40,7 +40,7 @@
 
 <h2 id="session-based-authentication">Session-based Authentication</h2>
 
-<p>Droplr&rsquo;s API server notion of session is a bit different from what the name may imply. The basis of the authentication system is the email/password based authentication. However, this system is not adequate for the anonymous drag &amp; drop upload feature presented by the Droplr&rsquo;s web site.</p>
+<p>Droplr&rsquo;s API server notion of session is a bit different from what the name may imply. The basis of the authentication system is the email/password based authentication. However, this system is not adequate for the anonymous drag and drop upload feature presented by Droplr&rsquo;s web app.</p>
 
 <p>Droplr&rsquo;s API had, therefore, to support some kind of anonymous authentication mechanism that worked pretty much the same way as an email/password authentication system, except accounts could be created on-the-fly without registration info.</p>
 
@@ -156,9 +156,11 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p><code class="prettyprint">POST /account</code></p>
+<p>Create an account</p>
 
-<p><strong>Arguments</strong></p>
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /account</code></p>
 
 <table><thead>
 <tr>
@@ -219,11 +221,9 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h4 id="error-responses">Error Responses</h4>
+<h5 id="error-responses">Error Responses</h5>
 
-<h5 id="response-if-email-or-password-are-missing">Response if email or password are missing</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-missing-email-or-password">400 (Bad Request): Missing Email or Password</h6>
 
 <table><thead>
 <tr>
@@ -249,9 +249,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-email-is-not-valid">Response if the email is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-invalid-email">400 (Bad Request): Invalid Email</h6>
 
 <table><thead>
 <tr>
@@ -277,9 +275,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-email-is-already-taken">Response if the email is already taken</h5>
-
-<p><code class="prettyprint">409 Conflict</code></p>
+<h6 id="409-conflict-email-already-taken">409 (Conflict): Email Already Taken</h6>
 
 <table><thead>
 <tr>
@@ -305,9 +301,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-password-is-not-valid">Response if the password is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-invalid-password">400 (Bad Request): Invalid Password</h6>
 
 <table><thead>
 <tr>
@@ -333,9 +327,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-username-is-not-valid">Response if the username is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-invalid-username">400 (Bad Request): Invalid Username</h6>
 
 <table><thead>
 <tr>
@@ -361,9 +353,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-username-is-already-taken">Response if the username is already taken</h5>
-
-<p><code class="prettyprint">409 Conflict</code></p>
+<h6 id="409-conflict-username-already-taken">409 (Conflict): Username Already Taken</h6>
 
 <table><thead>
 <tr>
@@ -389,9 +379,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-domain-is-already-taken">Response if domain is already taken</h5>
-
-<p><code class="prettyprint">409 Conflict</code></p>
+<h6 id="409-conflict-domain-already-taken">409 (Conflict): Domain Already Taken</h6>
 
 <table><thead>
 <tr>
@@ -417,14 +405,14 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
-    <li>Subdomain will be used for teamName.</li>
-    <li>If a subdomain is provided but is in use, an incremental integer will be added as a suffix.</li>
-    <li>If a subdomain is not provided one will be derived from the email domain.</li>
-  </ul>
-</aside>
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+<li>Subdomain will be used for teamName.</li>
+<li>If a subdomain is provided but is in use, an incremental integer will be added as a suffix.</li>
+<li>If a subdomain is not provided one will be derived from the email domain.</li>
+</ul>
 
 <h3 id="create-team-member-account">Create Team Member Account</h3>
 
@@ -485,9 +473,11 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
-<p><code class="prettyprint">POST /teams/:team_id/account</code></p>
+<p>Create team member account</p>
 
-<p><strong>Arguments</strong></p>
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /teams/:team_id/account</code></p>
 
 <table><thead>
 <tr>
@@ -523,11 +513,9 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h4 id="error-responses">Error Responses</h4>
+<h5 id="error-responses">Error Responses</h5>
 
-<h5 id="response-if-email-or-password-are-missing">Response if email or password are missing</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-missing-email-or-password">400 (Bad Request): Missing Email or Password</h6>
 
 <table><thead>
 <tr>
@@ -553,9 +541,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-email-is-not-valid">Response if the email is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-invalid-email">400 (Bad Request): Invalid Email</h6>
 
 <table><thead>
 <tr>
@@ -581,9 +567,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-email-is-already-taken">Response if the email is already taken</h5>
-
-<p><code class="prettyprint">409 Conflict</code></p>
+<h6 id="409-conflict-email-already-taken">409 (Conflict): Email Already Taken</h6>
 
 <table><thead>
 <tr>
@@ -609,9 +593,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-password-is-not-valid">Response if the password is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-password-invalid">400 (Bad Request): Password Invalid</h6>
 
 <table><thead>
 <tr>
@@ -637,9 +619,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-username-is-not-valid">Response if the username is not valid</h5>
-
-<p><code class="prettyprint">400 Bad Request</code></p>
+<h6 id="400-bad-request-username-invalid">400 (Bad Request): Username Invalid</h6>
 
 <table><thead>
 <tr>
@@ -665,9 +645,7 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h5 id="response-if-the-username-is-already-taken">Response if the username is already taken</h5>
-
-<p><code class="prettyprint">409 Conflict</code></p>
+<h6 id="409-conflict-username-already-taken">409 (Conflict): Username Already Taken</h6>
 
 <table><thead>
 <tr>
@@ -693,13 +671,13 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
-  </ul>
-</aside>
+<h5 id="notes">Notes</h5>
 
-<h3 id="update-a-customer_id">Update a customer_id</h3>
+<ul>
+<li>The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.</li>
+</ul>
+
+<h3 id="update-customer-id">Update Customer ID</h3>
 
 <blockquote>
 <p>Example Request</p>
@@ -726,15 +704,11 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 <span class="p">});</span>
 </code></pre>
 
-<blockquote>
-<p>Example Response</p>
-</blockquote>
-<pre class="highlight json"><code><span class="w">  </span><span class="p">{}</span><span class="w">
-</span></code></pre>
+<p>Create a customer_id</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
 
 <p><code class="prettyprint">PUT /account/customer_id</code></p>
-
-<p><strong>Arguments</strong></p>
 
 <table><thead>
 <tr>
@@ -760,26 +734,28 @@ Furthermore, the type of authentication identifier of the <em>Authorization</em>
 </tr>
 </tbody></table>
 
-<h4 id="error-responses">Error Responses</h4>
+<h5 id="error-responses">Error Responses</h5>
 
 <h3 id="convert-session-to-account">Convert Session to Account</h3>
 
-<p><code class="prettyprint">POST /sessions/convert</code></p>
+<p>Create session to account</p>
 
-<p><strong>Arguments</strong></p>
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /sessions/convert</code></p>
 
 <p>Same input parameters and format as <a href="#create-account">create account</a> action.</p>
 
-<h4 id="responses">Responses</h4>
+<h5 id="responses">Responses</h5>
 
 <p>Same output parameters and format as <a href="#create-account">create account</a> action.</p>
 
-<aside class="notice">
-  <ul>
-    <li>The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).</li>
-    <li>This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.</li>
-  </ul>
-</aside>
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The authentication used for this action must be session authentication. Only first party web application tier apps can perform this action (basically just the website at droplr.com).</li>
+<li>This action creates a new account with the provided details and migrates all the drops from the session - which is invalidated - to the new user account.</li>
+</ul>
 
           <h1 id="public-operations">Public Operations</h1>
 
@@ -1031,15 +1007,13 @@ Content-Length: 78
   Requests in the HEADERS format do not require the format type to be appended at the end of the URI (as is the case with all other formats).
 </aside>
 
-<h2 id="actions">Actions</h2>
-
-<h3 id="introduction">Introduction</h3>
+<h2 id="operations-reference">Operations Reference</h2>
 
 <p>Droplr&rsquo;s API consists of several RESTful operations to create, read and delete drops as well as operations to manage user accounts.</p>
 
 <p>This document provides an extensive listing of these operations, along with their input &amp; output parameters, supported <a href="#data-formats">formats</a>, and special notes.</p>
 
-<h4 id="environments-and-encryption">Environments and Encryption</h4>
+<h3 id="environments-and-encryption">Environments and Encryption</h3>
 
 <p>Before any application is authorized to hit the production servers, it must go through a staging period on the development environments.</p>
 
@@ -1052,7 +1026,7 @@ Content-Length: 78
 
 <p>While encrypted HTTP connections are optional on the development environment, they are mandatory for the production environment &ndash; which doesn&rsquo;t even support non-encrypted connections.</p>
 
-<h4 id="operation-errors">Operation Errors</h4>
+<h3 id="operation-errors">Operation Errors</h3>
 <pre class="highlight shell"><code><span class="c"># Example error response</span>
 
 HTTP/1.1 401 Unauthorized
@@ -1070,6 +1044,250 @@ x-droplr-errordetails: No such user
 <li><p><strong>Error details:</strong> Contains a user-friendly english (<code class="prettyprint">en-US</code>) message that can be displayed to the user of the app. It can be found on the header <code class="prettyprint">x-droplr-errordetails</code>.</p></li>
 </ul>
 
+<h4 id="common-error-responses">Common Error Responses</h4>
+
+<p>There are a great deal of errors that are common to all operations. The following is a comprehensive list of these errors along with the matching HTTP status code, a description of the cause and the message that is sent in the <code class="prettyprint">x-droplr-errordetails</code> header.</p>
+
+<!-- Request.BlacklistedUserAgent | 403 | The client user agent was blacklisted. Blacklisting user agents is an effective way to block a specific version of an application without deleting its access credentials. Your application may be blacklisted if erratic behavior is detected. Since we assume this is a temporary issue, we convey an error message that warns users to update their application to the latest version. | Please update to the newest version -->
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Internal.DataAccessError</strong></td>
+<td>503</td>
+<td>Temporary failure on Droplr&rsquo;s data storage system.</td>
+<td>Temporary data access failure when performing operation</td>
+</tr>
+<tr>
+<td><strong>Internal.TooManyRequest</strong></td>
+<td>503</td>
+<td>Server is under extremely heavy load and will discard some requests in order to keep serving a percentage of those.</td>
+<td>Server is under heavy load; please try again later</td>
+</tr>
+<tr>
+<td><strong>Maintenance.GoingDown</strong></td>
+<td>503</td>
+<td>Server is under maintenance and will be shutdown soon.</td>
+<td>Server will be going down for maintenance shortly</td>
+</tr>
+<tr>
+<td><strong>Maintenance.ReadOnly</strong></td>
+<td>503</td>
+<td>Server is under maintenance and only non-idempotent operations (read-only) will be allowed.</td>
+<td>Server is under maintenance; only read operations will be allowed</td>
+</tr>
+<tr>
+<td><strong>Authentication.InvalidAuthHeader</strong></td>
+<td>401</td>
+<td>Auth header is invalid; please refer to the Auth &amp; auth guide.</td>
+<td>Authorization header format is not in conformity with specification</td>
+</tr>
+<tr>
+<td><strong>Authentication.UnknownScheme</strong></td>
+<td>401</td>
+<td>Authentication scheme is unknown; please refer to the Auth &amp; auth guide.</td>
+<td>Authentication scheme not supported: <code class="prettyprint">%SCHEME%</code></td>
+</tr>
+<tr>
+<td><strong>Authentication.InvalidScheme</strong></td>
+<td>401</td>
+<td>The authentication scheme used was not valid for the requested operation.</td>
+<td>Authentication scheme not supported for this action</td>
+</tr>
+<tr>
+<td><strong>Authentication.InvalidSignature</strong></td>
+<td>401</td>
+<td>The HMAC-SHA1 signature does not match expected value.</td>
+<td>HMAC SHA1 signature is invalid</td>
+</tr>
+<tr>
+<td><strong>Authentication.ReplayedSignature</strong></td>
+<td>401</td>
+<td>The signature generated for the request has recently been used. Make sure the value of the <code class="prettyprint">Date</code> header is being set according to the <a href="#authentication-amp-authorization">auth</a> guide.</td>
+<td>Signature has already been used</td>
+</tr>
+<tr>
+<td><strong>Authentication.ClockSkew</strong></td>
+<td>401</td>
+<td>The client&rsquo;s clock is too far ahead/behind the server&rsquo;s clock.</td>
+<td>Date in request (<code class="prettyprint">%REQUEST_DATE%</code>) is too far ahead/behind the server date (<code class="prettyprint">%SERVER_DATE%</code>)</td>
+</tr>
+<tr>
+<td><strong>Authentication.UnknownApplication</strong></td>
+<td>401</td>
+<td>Application does not have credentials to perform operations on the server.</td>
+<td>No such application</td>
+</tr>
+<tr>
+<td><strong>Authentication.UnknownUser</strong></td>
+<td>401</td>
+<td>User with given identifier does not exist.</td>
+<td>No such user</td>
+</tr>
+<tr>
+<td><strong>Authentication.SignatureMismatch</strong></td>
+<td>401</td>
+<td>Signature is according to spec but result does not match expected. Typically means wrong password.</td>
+<td>Invalid password</td>
+</tr>
+<tr>
+<td><strong>Authorization.NoPrivileges</strong></td>
+<td>403</td>
+<td>Application attempted to execute an operation to which it does not have clearance.</td>
+<td>This application has no permissions to execute this action</td>
+</tr>
+<tr>
+<td><strong>Request.InvalidUri</strong></td>
+<td>400</td>
+<td>Malformed uri and/or query parameters on HTTP request line.</td>
+<td>Invalid uri and/or query params</td>
+</tr>
+<tr>
+<td><strong>Request.NoAction</strong></td>
+<td>404</td>
+<td>No operation matching request URI.</td>
+<td>No action at the requested uri</td>
+</tr>
+<tr>
+<td><strong>Request.BodyMustBeEmpty</strong></td>
+<td>400</td>
+<td>The application sent body for a request that doesn&rsquo;t require body. Server will immediately reply with error and close the connection to avoid unnecessary resource usage.</td>
+<td>Request body must be empty</td>
+</tr>
+<tr>
+<td><strong>Request.NoContentLength</strong></td>
+<td>400</td>
+<td>Client application sent content without specifying a <code class="prettyprint">Content-Lenght</code> header.</td>
+<td>This server always requires Content-Length header, even for chunked requests</td>
+</tr>
+<tr>
+<td><strong>Request.ContentTooLarge</strong></td>
+<td>400</td>
+<td>Client application specified a value that exceeds the acceptable limits (2GB).</td>
+<td>Content-Length indicates illegal size (over 2GB)</td>
+</tr>
+<tr>
+<td><strong>Request.NoContentType</strong></td>
+<td>400</td>
+<td>Request did not bear a <code class="prettyprint">Content-Type</code> header, which is mandatory when the request includes a body.</td>
+<td>Content-Type header is mandatory</td>
+</tr>
+<tr>
+<td><strong>Request.ContentLengthMismatch</strong></td>
+<td>400</td>
+<td>Announced content length (on <code class="prettyprint">Content-Length</code> header) doesn&rsquo;t match actual content length.</td>
+<td>Mismatch between announced content length and actual readable data</td>
+</tr>
+<tr>
+<td><strong>Request.NoDateHeader</strong></td>
+<td>400</td>
+<td>No <code class="prettyprint">Date</code> (or <code class="prettyprint">x-droplr-date</code>) header found on request. This header is always mandatory.</td>
+<td>No Date header found in request</td>
+</tr>
+<tr>
+<td><strong>Request.NoAuthorizationHeader</strong></td>
+<td>400</td>
+<td>No <code class="prettyprint">Authorization</code> header found on request. This header is always mandatory.</td>
+<td>No Authorization header found in request</td>
+</tr>
+<tr>
+<td><strong>Request.InvalidJson</strong></td>
+<td>400</td>
+<td>JSON content in request body could not be correctly decoded.</td>
+<td>Failed to parse JSON request body</td>
+</tr>
+<tr>
+<td><strong>Request.UnsupportedDataFormat</strong></td>
+<td>400</td>
+<td>Client application tried to perform an operation using an invalid data format (e.g. .xml).</td>
+<td>Unsupported request data format: <code class="prettyprint">%DATA_FORMAT%</code></td>
+</tr>
+<tr>
+<td><strong>Request.NoJson</strong></td>
+<td>400</td>
+<td>Server was expecting JSON content in request body but no content (or non-JSON content) was found.</td>
+<td>A JSON body is required, along with content Content-Type header set</td>
+</tr>
+<tr>
+<td><strong>Request.BadContentType</strong></td>
+<td>400</td>
+<td>Value of the header <code class="prettyprint">Content-Type</code> is not a valid mime type.</td>
+<td>Unable to parse Content-Type header value: <code class="prettyprint">%CONTENT_TYPE%</code></td>
+</tr>
+<tr>
+<td><strong>Request.ChunksNotAcceptable</strong></td>
+<td>400</td>
+<td>Chunked transfer not acceptable for the requested operation.</td>
+<td>Chunked requests not accepted for this action</td>
+</tr>
+<tr>
+<td><strong>Request.PipelineAbuse</strong></td>
+<td>400</td>
+<td>Client application exceeded maximum allowed pipelined requests for a single connection.</td>
+<td>Too many pipelined requests</td>
+</tr>
+<tr>
+<td><strong>Request.BlacklistedUserAgent</strong></td>
+<td>403</td>
+<td>The client user agent was blacklisted. Blacklisting user agents is an effective way to block a specific version of an application without deleting its access credentials. Your application may be blacklisted if erratic behavior is detected. Since we assume this is a temporary issue, we convey an error message that warns users to update their application to the latest version.</td>
+<td>Please update to the newest version</td>
+</tr>
+</tbody></table>
+
+<p>The following errors apply only to drop creation operations (shorten link, create note and upload file).</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>CreateDrop.TooManyUploads</strong></td>
+<td>503</td>
+<td>Too many concurrent uploads and the server needs to reject some in order to maintain an acceptable bandwidth for all uploads.</td>
+<td>Cannot process your request at this time, please try again later</td>
+</tr>
+<tr>
+<td><strong>CreateDrop.MaxSizeExceeded</strong></td>
+<td>400</td>
+<td>The maximum upload size was exceeded. Drops have a size limit based on type and the user&rsquo;s account</td>
+<td>Max upload size limit exceeded: <code class="prettyprint">%SIZE%</code></td>
+</tr>
+<tr>
+<td><strong>CreateDrop.NoSpace</strong></td>
+<td>507</td>
+<td>The user has hit the limits of his or her account and cannot upload files until he clears out some space.</td>
+<td>Used <code class="prettyprint">%USED%</code> of available <code class="prettyprint">%AVAILABLE%</code></td>
+</tr>
+<tr>
+<td><strong>CreateDrop.ContentTypeMustMatch</strong></td>
+<td>400</td>
+<td>The value in <code class="prettyprint">Content-Type</code> header does not match any of the values in the content type white list.</td>
+<td>Content-Type header is mandatory and must match <code class="prettyprint">%LIST%</code></td>
+</tr>
+<tr>
+<td><strong>CreateDrop.InvalidPrivacy</strong></td>
+<td>400</td>
+<td>The value in <code class="prettyprint">privacy</code> query param or <code class="prettyprint">x-droplr-privacy</code> custom header is not a valid privacy value.</td>
+<td>Invalid privacy value</td>
+</tr>
+<tr>
+<td><strong>CreateDrop.InvalidPrivacy</strong></td>
+<td>400</td>
+<td>The value in <code class="prettyprint">password</code> query param or <code class="prettyprint">x-droplr-password</code> custom header is not a valid password value; it either has invalid length (too short or too long) or contains invalid characters.</td>
+<td>Invalid password value</td>
+</tr>
+</tbody></table>
+
 <h4 id="error-internationalization">Error Internationalization</h4>
 <pre class="highlight shell"><code><span class="o">[</span>English dictionary]
 <span class="o">(</span>K: Authentication.UnknownUser, V: <span class="s2">"There is no such user"</span><span class="o">)</span>
@@ -1080,7 +1298,7 @@ x-droplr-errordetails: No such user
 
 <p>The <code class="prettyprint">error code</code> property is useful to internationalize your application. By creating multiple dictionaries (also commonly referred to as &lsquo;map&rsquo;) where the keys are all the values for the <code class="prettyprint">error code</code> property and the values are translations, you can show your users a detailed localized message for every error that happens when interacting with the Droplr server.</p>
 
-<h4 id="setting-a-meaningful-user-agent-header-value">Setting a Meaningful User-Agent Header Value</h4>
+<h3 id="setting-a-meaningful-user-agent-header-value">Setting a Meaningful User-Agent Header Value</h3>
 
 <p>Each application will be uniquely defined by its public key, which will be present in the signature it sends with each request (the value of the <code class="prettyprint">Authorization</code> header). This identifier will always be the same even though the application version will likely change over time.</p>
 
@@ -1102,7 +1320,7 @@ x-droplr-errordetails: No such user
 
 <p><code class="prettyprint">DroplrService.objc/1.0 %APP_IDENTIFIER%</code></p>
 
-<h4 id="drop-creation-operations">Drop Creation Operations</h4>
+<h3 id="drop-creation-operations">Drop Creation Operations</h3>
 
 <p>Droplr&rsquo;s API server fully supports the 100-Continue header (RFC <em>TODO</em>). If possible, your client should implement this directive, as it&rsquo;ll save both time and bandwidth.</p>
 
@@ -1112,7 +1330,7 @@ x-droplr-errordetails: No such user
 
 <p>When this feature is not used and the upload does not pass validation, it will be interrupted before all the data is sent through. This will likely cause problems with faulty HTTP implementations.</p>
 
-<h4 id="drop-privacy">Drop Privacy</h4>
+<h3 id="drop-privacy">Drop Privacy</h3>
 
 <p>Droplr supports three privacy modes, which reflects how drops are visible via their codes.</p>
 
@@ -1122,7 +1340,7 @@ x-droplr-errordetails: No such user
 
 <p>No matter what the privacy mode is upon its creation, the drop will <em>always</em> have default values for all the fields mentioned in the sections below (<strong>short code</strong>, <strong>obscure code</strong> and <strong>password</strong>). Beware that older drops (pre-privacy era) may not include <strong>password</strong> field when retrieved so never assume password is always present.</p>
 
-<h5 id="public">Public</h5>
+<h4 id="public">Public</h4>
 
 <p>This is the default mode, reflected by the value <code class="prettyprint">PUBLIC</code> in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
 
@@ -1132,7 +1350,7 @@ x-droplr-errordetails: No such user
 
 <p><strong>Short code</strong> is an alphanumeric string that fits the pattern <code class="prettyprint">[a-zA-Z0-9]+</code>.</p>
 
-<h5 id="obscure">Obscure</h5>
+<h4 id="obscure">Obscure</h4>
 
 <p>When a drop is configured to use its obscure code, it will only be accessible by its 16-char-long code, thus making it significantly harder to guess. A drop must be handled as obscure when the value <code class="prettyprint">OBSCURE</code> is present in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
 
@@ -1142,13 +1360,996 @@ x-droplr-errordetails: No such user
 
 <p><strong>Obscure code</strong> is an alphanumeric string that fits the pattern <code class="prettyprint">[a-zA-Z0-9]{16}</code>.</p>
 
-<h5 id="private">Private</h5>
+<h4 id="private">Private</h4>
 
 <p>Drops configured as private can either be viewed by their <strong>short code</strong> or their <strong>obscure code</strong> but will always require a password to be viewed. A drop must be handled as private when the value <code class="prettyprint">PRIVATE</code> is present in the <code class="prettyprint">privacy</code> JSON field or the <code class="prettyprint">x-droplr-privacy</code> Custom HTTP header.</p>
 
 <p>When configured to private mode, the server will use the <strong>short code</strong> in the shortlink field (<code class="prettyprint">shortlink</code> JSON field or <code class="prettyprint">x-droplr-shortlink</code>) when returning drops, but in order for the shortlink to be directly accessibly (i.e. copy+paste accessible) you must append a forward-slash and the value of the password field (<code class="prettyprint">password</code> JSON field or <code class="prettyprint">x-droplr-password</code> Custom HTTP header).</p>
 
 <p>For instance, a drop with <strong>short code</strong> <code class="prettyprint">xkcd</code> and <strong>password</strong> <code class="prettyprint">verySafePassword</code> would have its shortlink returned as <code class="prettyprint">http://d.pr/xkcd</code> and would be directly accessible with <code class="prettyprint">http://d.pr/xkcd/verySafePassword</code>.</p>
+
+<aside class="warning">
+  Thumbnail shortlink modifiers (trailing <code>-</code>, <code>/thumbnail</code>, <code>/small</code> and <code>/medium</code>) as well as direct content access modifiers (trailing <code>+</code>) follow password-protected drop convetions too! If you were to fetch a thumbnail for an image with code <code>xkcd</code> and shortlink <code>http://d.pr/i/xkcd</code> by appending a trailing minus sign (<code>http://d.pr/i/xkcd-</code>), you would have to use <code>http://d.pr/i/xkcd/password-</code> instead.  
+</aside>
+
+<p>If the password is not appended to the shortlink (thus creating an <strong>accessible link</strong>), the viewer will be presented with a screen requiring password input. This may be desired behavior if you wish to send the link for a drop via one transmission medium and the password via another.</p>
+
+<p><strong>Password</strong> is an alphanumeric string that fits the pattern <code class="prettyprint">[a-zA-Z0-9]{4,32}</code>, although by default, an 8-char-long password is assigned. The character restriction for the password (alphanumeric chars only) is required to ensure that the drop is always accessible via a valid URL, since special chars would potentially break browser implementations and thus rendering the drop inaccessible.</p>
+
+<h3 id="accessible-drop-urls">Accessible Drop URLs</h3>
+<pre class="highlight plaintext"><code>String accessibleUrl(Drop drop) {
+    switch (drop.privacy) {
+        case "PRIVATE":
+            return drop.shortlink + "/" + drop.password;
+
+        case "PUBLIC":
+        case "OBSCURE":
+        case default:
+            return drop.shortlink;
+}
+</code></pre>
+
+<p>With any arbitrary language, assuming <code class="prettyprint">Drop</code> represents a properly parsed drop response from the server, this algorithm will ensure that an accessible url is generated for a drop.</p>
+
+<h2 id="actions">Actions</h2>
+
+<h3 id="shorten-link">Shorten Link</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight shell"><code>POST /links HTTP/1.0
+...
+x-droplr-privacy: PRIVATE
+x-droplr-password: quagmire
+...
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: LINK
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"totalSpace"</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"http://droplr.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"usedSpace"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1304642741028</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"LINK"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"xkcdXKCDxkcdXKCD"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Create a short link to a long link.</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /links</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>Query Parameter</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Drop privacy</strong></td>
+<td>The privacy with which this drop should be created, overriding default account settings.</td>
+<td><code class="prettyprint">x-droplr-privacy</code></td>
+<td><code class="prettyprint">privacy</code></td>
+</tr>
+<tr>
+<td><strong>Drop password</strong></td>
+<td>The password with which this drop should be created, overriding default password generation.</td>
+<td><code class="prettyprint">x-droplr-password</code></td>
+<td><code class="prettyprint">password</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>JSON Field</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Drop code</strong></td>
+<td>The code for the drop.</td>
+<td><code class="prettyprint">x-droplr-code</code></td>
+<td><code class="prettyprint">code</code></td>
+</tr>
+<tr>
+<td><strong>Created at</strong></td>
+<td>The timestamp, since UTC (in milliseconds), when the drop was created.</td>
+<td><code class="prettyprint">x-droplr-createdat</code></td>
+<td><code class="prettyprint">createdAt</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>The type of drop (LINK, NOTE, IMAGE, VIDEO, AUDIO, FILE).</td>
+<td><code class="prettyprint">x-droplr-type</code></td>
+<td><code class="prettyprint">type</code></td>
+</tr>
+<tr>
+<td><strong>Title</strong></td>
+<td>The title of the drop.</td>
+<td><code class="prettyprint">x-droplr-title</code> header &ndash; Base64 encoded (in order to preserve UTF-8 char</td>
+<td><code class="prettyprint">title</code></td>
+</tr>
+<tr>
+<td><strong>Size</strong></td>
+<td>The size of the drop, in bytes.</td>
+<td><code class="prettyprint">x-droplr-size</code></td>
+<td><code class="prettyprint">size</code></td>
+</tr>
+<tr>
+<td><strong>Privacy</strong></td>
+<td>The privacy mode with which the drop was created. Possible values are <code class="prettyprint">PUBLIC</code>, <code class="prettyprint">PRIVATE</code> or <code class="prettyprint">OBSCURE</code>.</td>
+<td><code class="prettyprint">x-droplr-privacy</code></td>
+<td><code class="prettyprint">privacy</code></td>
+</tr>
+<tr>
+<td><strong>Password</strong></td>
+<td>The password with which the drop was created. Will only be present of drop privacy was set to <code class="prettyprint">PRIVATE</code>. Password is sent as plain text (reminder: the HTTP connection is encrypted) as drop passwords can only contain characters allowed in a URL path component</td>
+<td><code class="prettyprint">x-droplr-password</code></td>
+<td><code class="prettyprint">privacy</code></td>
+</tr>
+<tr>
+<td><strong>Obscure code</strong></td>
+<td>A hard-to-guess 16 char unique string that maps to this drop. Drops can be accessed either via short code or obscure code. Drops configured to use <code class="prettyprint">OBSCURE</code> privacy can only be accessed via obscure code.</td>
+<td><code class="prettyprint">x-droplr-obscurecode</code></td>
+<td><code class="prettyprint">obscureCode</code></td>
+</tr>
+<tr>
+<td><strong>Shortlink</strong></td>
+<td>The shortlink where the drop is available at; it&rsquo;s a concatenation of the user&rsquo;s custom domain (if set) or Droplr&rsquo;s default domain and the drop code.</td>
+<td><code class="prettyprint">x-droplr-shortlink</code></td>
+<td><code class="prettyprint">shortlink</code></td>
+</tr>
+<tr>
+<td><strong>Used space</strong></td>
+<td>The total used space for the account creating the drop, in bytes.</td>
+<td><code class="prettyprint">x-droplr-usedspace</code></td>
+<td><code class="prettyprint">usedSpace</code></td>
+</tr>
+<tr>
+<td><strong>Total space</strong></td>
+<td>The total space availabe for the account creating the drop, in bytes.</td>
+<td><code class="prettyprint">x-droplr-totalspace</code></td>
+<td><code class="prettyprint">totalSpace</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="errors">Errors</h5>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>CreateDrop.InvalidUrl</strong></td>
+<td>400</td>
+<td>The link to shorten is an invalid link.</td>
+<td>Invalid URL</td>
+</tr>
+<tr>
+<td><strong>CreateDrop.RecursiveLink</strong></td>
+<td>400</td>
+<td>The link to shorten is a link to one of Droplr&rsquo;s domains (or subdomains).</td>
+<td>Cannot shorten links to Droplr&rsquo;s urls</td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The title for the drop generated with this operation will be the original link itself. If the target is a webpage, the title will eventually be updated the the title of the webpage &ndash; assuming there is one.</li>
+<li>This action does not allow shortening links to Droplr&rsquo;s domains (<code class="prettyprint">droplr.com</code> and <code class="prettyprint">d.pr</code>) or its subdomains.</li>
+</ul>
+
+<h3 id="create-note">Create Note</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>POST /notes HTTP/1.1
+...
+Content-Type: text/plain
+...
+
+POST /notes HTTP/1.1
+...
+Content-Type: text/code
+x-droplr-privacy: PRIVATE
+x-droplr-password: quahog
+...
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: NOTE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"totalSpace"</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"http://droplr.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"usedSpace"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1304642741028</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"NOTE"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"xkcdXKCDxkcdXKCD"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Create a text based document and a return a short link for it</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON
+<strong>Variants:</strong> Plain text, Markdown, Textile, Code, etc</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /notes</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Type of note</strong></td>
+<td>The type of note is defined by setting the <code class="prettyprint">Content-Type</code> header to <code class="prettyprint">text/plain</code>, <code class="prettyprint">text/markdown</code>, <code class="prettyprint">text/textile</code> or <code class="prettyprint">text/code</code>. As long as the <code class="prettyprint">Content-Type</code> header is set to a mime type with main type being &ldquo;text&rdquo;, the drop will be recognized as a note. The mime subtype is merely a hint so that applications viewing this drop can apply text formatting and/or styling (such as code markup or markdown-to-html rendering).</td>
+</tr>
+</tbody></table>
+
+<p>All other input parameters are the same as the <a href="#shorten-link">shorten link</a> action.</p>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>JSON Field</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Variant</strong></td>
+<td>The variant is a hint to applications on how to display the drop&rsquo;s content and/or its icon. Beware that this is basically a free-form field and can be set to any value by other applications.</td>
+<td><code class="prettyprint">x-droplr-variant</code></td>
+<td><code class="prettyprint">variant</code></td>
+</tr>
+</tbody></table>
+
+<p>All other output parameters are the same as the <a href="#shorten-link">shorten link</a> action.</p>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The title of the drop will be based on the contents of the note; its first 100 characters with newlines replaced by spaces.</li>
+</ul>
+
+<h3 id="upload-file">Upload File</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>POST /files HTTP/1.1
+...
+x-droplr-filename: QSBmaW5lIG5vdGU=
+...
+
+POST /files HTTP/1.1
+...
+x-droplr-filename: QSBmaW5lIG5vdGU=
+x-droplr-privacy: PRIVATE
+x-droplr-password: wekapaw
+...
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: FILE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-usedspace: 11
+x-droplr-shortlink: http://d.pr/xkcd
+x-droplr-totalspace: 10000
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"totalSpace"</span><span class="p">:</span><span class="mi">10000</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"http://droplr.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"usedSpace"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1304642741028</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"FILE"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"xkcdXKCDxkcdXKCD"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Upload a file and return a short link for its location</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON
+<strong>Variants:</strong> Image, Audio, Video, File</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">POST /files</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>Query Parameter</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Filename</strong></td>
+<td>The name under which the file should be stored. This property is always mandatory and can either be sent with query params or custom headers (query params take precedence). It must be sent as a query param or a header since the body of the request is reserved for the upload data.</td>
+<td><code class="prettyprint">x-droplr-filename</code></td>
+<td><code class="prettyprint">filename</code></td>
+</tr>
+</tbody></table>
+
+<p>All other input parameters are the same as the <a href="#create-note">create note</a> action.</p>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<p>All output parameters are the same as the <a href="#create-note">create note</a> action.</p>
+
+<h5 id="errors">Errors</h5>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>CreateDrop.RemoteStorageOperationFailed</strong></td>
+<td>500</td>
+<td>There was an error storing the file&rsquo;s contents.</td>
+<td>Error storing drop contents</td>
+</tr>
+<tr>
+<td><strong>CreateDrop.MissingFilename</strong></td>
+<td>400</td>
+<td>Request did not bear a <code class="prettyprint">x-droplr-filename</code> header with the name of the file.</td>
+<td>Missing filename; please set query parameter or use custom header</td>
+</tr>
+<tr>
+<td><strong>CreateDrop.FilenameNotBase64</strong></td>
+<td>400</td>
+<td>The server could not decode the contents of the header <code class="prettyprint">x-droplr-filename</code> as Base 64.</td>
+<td>Filename header must be base64 encoded</td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The contents of the <code class="prettyprint">x-droplr-filename</code> header <strong>MUST NOT</strong> be URL escaped and <strong>MUST</strong> be Base64 encoded. Since HTTP headers must be in US ASCII encoding, UTF-8 characters are not supported. Encoding UTF-8 text to Base64 (and then decoding at the server side) ensures that UTF-8 characters are supported as the drop&rsquo;s title.</li>
+<li>The filename header is always mandatory, whether the action is executed with JSON or HEADERS data format.</li>
+</ul>
+
+<h3 id="read-drop">Read Drop</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>GET /drops/xkcd HTTP/1.1
+
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 201 Created
+x-droplr-code: xkcd
+x-droplr-createdat: 1304642398598
+x-droplr-type: FILE
+x-droplr-title: QSBmaW5lIG5vdGU=
+x-droplr-size: 11
+x-droplr-shortlink: http://d.pr/xkcd
+Content-Length: 0
+
+HTTP/1.1 201 Created
+Content-Type: application/json; encoding=utf-8
+Content-Length: 211
+</code></pre>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"http://droplr.com"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1304642741028</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"FILE"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkcd"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">11</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"xkcdXKCDxkcdXKCD"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Read the contents of a previously created drop</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">GET /drops/:code</code></p>
+
+<p>The only input parameter is the drop <code class="prettyprint">code</code> supplied in the URL; e.g. <code class="prettyprint">GET /drops/xkcd</code>.</p>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<p>All output parameters are the same as <a href="#upload-file">upload file</a> except for <code class="prettyprint">usedSpace</code> and <code class="prettyprint">totalSpace</code>, which are not present in the response to this request.</p>
+
+<h5 id="errors">Errors</h5>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>ReadDrop.NoDrop</strong></td>
+<td>404</td>
+<td>Request specified a drop code that does not exist.</td>
+<td>No such drop</td>
+</tr>
+<tr>
+<td><strong>ReadDrop.NotOwner</strong></td>
+<td>403</td>
+<td>Request specified a drop code that is not owned by the user whose credentials were used to sign the request.</td>
+<td>You&rsquo;re not the other of that drop</td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>Drops can only be read by their creators. If you request details on a drop not owned by the credentials with which you sign the request, the server will return an unauthorized response.</li>
+</ul>
+
+<h3 id="list-drops">List Drops</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"startIndex"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"amount"</span><span class="p">:</span><span class="mi">10</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"link"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="p">{</span><span class="w">
+  </span><span class="nt">"since"</span><span class="p">:</span><span class="mi">1299648278321</span><span class="w">
+</span><span class="p">}</span><span class="w">
+
+</span><span class="p">{</span><span class="w">
+  </span><span class="nt">"until"</span><span class="p">:</span><span class="mi">1299648278321</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"sortBy"</span><span class="p">:</span><span class="s2">"VIEWS"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"order"</span><span class="p">:</span><span class="s2">"ASC"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight plaintext"><code>HTTP/1.1 200 OK
+Content-Type: application/json; encoding=utf-8
+Content-Length: ...
+</code></pre>
+<pre class="highlight json"><code><span class="p">[</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"content"</span><span class="p">:</span><span class="s2">"http://redis.io"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"http://redis.io"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"POxqReCZlYk14iN6"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"views"</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1333505121880</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PUBLIC"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastAccess"</span><span class="p">:</span><span class="mi">1333505121880</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkcd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"LINK"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkcd"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">15</span><span class="w">
+  </span><span class="p">},</span><span class="w">
+  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"content"</span><span class="p">:</span><span class="s2">"a very long note that will be truncate..."</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"a note"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"obscureCode"</span><span class="p">:</span><span class="s2">"XslQ13B12Qk14DN6"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"views"</span><span class="p">:</span><span class="mi">14</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"createdAt"</span><span class="p">:</span><span class="mi">1333505161880</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"privacy"</span><span class="p">:</span><span class="s2">"PRIVATE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"lePass"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"lastAccess"</span><span class="p">:</span><span class="mi">1333505121880</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"code"</span><span class="p">:</span><span class="s2">"xkce"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"NOTE"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"variant"</span><span class="p">:</span><span class="s2">"plain"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"shortlink"</span><span class="p">:</span><span class="s2">"http://d.pr/xkce"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"size"</span><span class="p">:</span><span class="mi">1500</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">]</span><span class="w">
+</span></code></pre>
+
+<p>Retrieve a list of previously created drops with the possibility to combine filters</p>
+
+<p><strong>Supported formats:</strong> JSON</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">GET /drops</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>Query Parameter</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Offset (optional, defaults to 0)</strong></td>
+<td>The drop index at which the list should start. Useful for pagination, the meaning of index zero depends on the sort order (which defaults to latest-drops-first). See the <strong>Order</strong> parameter.</td>
+<td><code class="prettyprint">offset</code></td>
+<td><code class="prettyprint">offset</code></td>
+</tr>
+<tr>
+<td><strong>Amount (optional, defaults to 10)</strong></td>
+<td>The amount of drops to retrieve. This value will be capped by the server if too many drops are requested.</td>
+<td><code class="prettyprint">amount</code></td>
+<td><code class="prettyprint">amount</code></td>
+</tr>
+<tr>
+<td><strong>Type (optional, defaults to ALL)</strong></td>
+<td>Filter by type of drop.</td>
+<td><code class="prettyprint">type</code></td>
+<td><code class="prettyprint">type</code></td>
+</tr>
+<tr>
+<td><strong>Sort by (optional, defaults to <code class="prettyprint">CREATION</code>)</strong></td>
+<td>Sort the retrieved drops by this field.</td>
+<td><code class="prettyprint">sortBy</code></td>
+<td><code class="prettyprint">sortBy</code></td>
+</tr>
+<tr>
+<td><strong>Order (optional, defaults to <code class="prettyprint">DESC</code>)</strong></td>
+<td>The order by which drops should be retrieved.</td>
+<td><code class="prettyprint">order</code></td>
+<td><code class="prettyprint">order</code></td>
+</tr>
+<tr>
+<td><strong>Since timestamp (optional)</strong></td>
+<td>List all drops created after a given timestamp, in milliseconds elapsed since UTC.</td>
+<td><code class="prettyprint">since</code></td>
+<td><code class="prettyprint">since</code></td>
+</tr>
+<tr>
+<td><strong>Until timestamp (optional)</strong></td>
+<td>List all drops created until a given timestamp, in milliseconds elapsed since UTC.</td>
+<td><code class="prettyprint">until</code></td>
+<td><code class="prettyprint">until</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<p>A list with drop information. Each entry in this list has the same format and parameters as the <a href="#read-drop">read drop</a> action, except that the content for notes will be truncated (to avoid very large data transfers).</p>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>This action will only return drops created by the user account whose credentials were used to authenticate the request.</li>
+<li>Acceptable values for <strong>Type</strong> input parameter are <code class="prettyprint">LINK</code>, <code class="prettyprint">NOTE</code>, <code class="prettyprint">IMAGE</code>, <code class="prettyprint">AUDIO</code>, <code class="prettyprint">VIDEO</code> and <code class="prettyprint">FILE</code>.</li>
+<li>Acceptable values for the <strong>Sort by</strong> criteria are <code class="prettyprint">CREATION</code> (default), <code class="prettyprint">CODE</code>, <code class="prettyprint">TITLE</code>, <code class="prettyprint">SIZE</code>, <code class="prettyprint">ACTIVITY</code> and <code class="prettyprint">VIEWS</code>.</li>
+<li>Acceptable values for the <strong>Sort order</strong> criterial are <code class="prettyprint">ASC</code> (for ascending) and <code class="prettyprint">DESC</code> (for descending).</li>
+</ul>
+
+<h3 id="delete-drop">Delete Drop</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>DELETE /drops/xkcd HTTP/1.1
+
+</code></pre>
+
+<p>Delete a previously created drop</p>
+
+<p><strong>Supported formats:</strong> HEADERS (there is no output, so defaults to HEADERS)</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">DELETE /drops/:code</code></p>
+
+<p>The only input parameter is the drop <code class="prettyprint">code</code> supplied in the URL; e.g. <code class="prettyprint">DELETE /drops/xkcd</code>.</p>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<p>N/A</p>
+
+<h5 id="errors">Errors</h5>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>DeleteDrop.NoDrop</strong></td>
+<td>404</td>
+<td>Drop for specified code does not exist.</td>
+<td>No such drop</td>
+</tr>
+<tr>
+<td><strong>DeleteDrop.NotOwner</strong></td>
+<td>403</td>
+<td>Request specified a drop for deletion that is not owned by the user whose credentials were used to sign the request.</td>
+<td>You&rsquo;re not the owner of that drop</td>
+</tr>
+<tr>
+<td><strong>DeleteDrop.AlreadyDeleted</strong></td>
+<td>410</td>
+<td>Request specified a drop for deletion that has already been deleted.</td>
+<td>Record already deleted</td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>This action will only delete drops created by the user account whose credentials were used to authenticate the request.</li>
+</ul>
+
+<h3 id="read-account-details">Read Account Details</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>GET /account HTTP/1.1
+</code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"key"</span><span class="p">:</span><span class="s2">"value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Retrieve information of a given account</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">GET /account</code></p>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>JSON Field</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>User id</strong></td>
+<td>The unique user id assigned to this account.</td>
+<td><code class="prettyprint">x-droplr-id</code></td>
+<td><code class="prettyprint">id</code></td>
+</tr>
+<tr>
+<td><strong>Created at</strong></td>
+<td>The POSIX timestamp (in milliseconds) when this account was created.</td>
+<td><code class="prettyprint">x-droplr-createdat</code></td>
+<td><code class="prettyprint">createdAt</code></td>
+</tr>
+<tr>
+<td><strong>Type</strong></td>
+<td>The type of account (PRO, REGULAR).</td>
+<td><code class="prettyprint">x-droplr-type</code></td>
+<td><code class="prettyprint">type</code></td>
+</tr>
+<tr>
+<td><strong>Subscription end</strong></td>
+<td>The exact date of the Pro subscription expiration, in milliseconds elapsed since UTC. This value will be present if <strong>Type</strong> is <code class="prettyprint">PRO</code>.</td>
+<td><code class="prettyprint">x-droplr-subscriptionend</code></td>
+<td><code class="prettyprint">subscriptionEnd</code></td>
+</tr>
+<tr>
+<td><strong>Max upload size</strong></td>
+<td>The maximum size for file uploads, depends on user account. Applications should use this value to test whether an upload can be performed before performing the upload.</td>
+<td><code class="prettyprint">x-droplr-maxuploadsize</code></td>
+<td><code class="prettyprint">uploadSize</code></td>
+</tr>
+<tr>
+<td><strong>Used space</strong></td>
+<td>The total used space by this user.</td>
+<td><code class="prettyprint">x-droplr-usedspace</code></td>
+<td><code class="prettyprint">usedSpace</code></td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>The user&rsquo;s current email.</td>
+<td><code class="prettyprint">x-droplr-email</code></td>
+<td><code class="prettyprint">email</code></td>
+</tr>
+<tr>
+<td><strong>Use custom domain</strong></td>
+<td>A flag that indicates what type of domain should be used (if <strong>Custom domain</strong> property is set).</td>
+<td><code class="prettyprint">x-droplr-domaintype</code></td>
+<td><code class="prettyprint">domainType</code></td>
+</tr>
+<tr>
+<td><strong>Custom domain</strong></td>
+<td>A custom domain to use when returning shortlinks for drops, if the <strong>Use custom domain</strong> flag is set.</td>
+<td><code class="prettyprint">x-droplr-domain</code></td>
+<td><code class="prettyprint">domain</code></td>
+</tr>
+<tr>
+<td><strong>Use root redirect</strong></td>
+<td>A flag that indicates whether root redirects should be used when hitting the custom domain without a drop code. This property only makes sense if both <strong>Custom domain</strong> and <strong>Root redirect</strong> properties are set.</td>
+<td><code class="prettyprint">x-droplr-userootredirect</code></td>
+<td><code class="prettyprint">useRootRedirect</code></td>
+</tr>
+<tr>
+<td><strong>Root redirect</strong></td>
+<td>Where to redirect HTTP requests to the custom domain (<strong>Custom domain</strong> property).</td>
+<td><code class="prettyprint">x-droplr-rootredirect</code></td>
+<td><code class="prettyprint">rootRedirect</code></td>
+</tr>
+<tr>
+<td><strong>Drop privacy</strong></td>
+<td>The privacy setting with which new drops will be created. Acceptable values are <code class="prettyprint">PUBLIC</code>, <code class="prettyprint">PRIVATE</code> and <code class="prettyprint">OBSCURE</code>.</td>
+<td><code class="prettyprint">x-droplr-dropprivacy</code></td>
+<td><code class="prettyprint">dropPrivacy</code></td>
+</tr>
+<tr>
+<td><strong>Theme</strong></td>
+<td>The theme to use on Droplr&rsquo;s website. This is a free-form string but typical values are &#39;default&rsquo;, &#39;light&rsquo; and &#39;dark&rsquo;. If the value is not recognized, the default theme will be used. Your application can also rely on this value to change its appearance.</td>
+<td><code class="prettyprint">x-droplr-theme</code></td>
+<td><code class="prettyprint">theme</code></td>
+</tr>
+<tr>
+<td><strong>Drop count</strong></td>
+<td>The number of drops created by this user.</td>
+<td><code class="prettyprint">x-droplr-dropcount</code></td>
+<td><code class="prettyprint">dropCount</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>The account that&rsquo;s read is the one whose credentials are provided in the authentication header.</li>
+</ul>
+
+<h3 id="edit-account-details">Edit Account Details</h3>
+
+<blockquote>
+<p>Example Request</p>
+</blockquote>
+<pre class="highlight plaintext"><code>PUT /account HTTP/1.1
+</code></pre>
+<pre class="highlight json"><code><span class="w">  </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="s2">"5f4dcc3b5aa765d61d8327deb882cf99"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"domain"</span><span class="p">:</span><span class="s2">"d.pr"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Example Response</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"key"</span><span class="p">:</span><span class="s2">"value"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Edit information for an account</p>
+
+<p><strong>Supported formats:</strong> HEADERS, JSON</p>
+
+<h5 id="input-parameters">Input Parameters</h5>
+
+<p><code class="prettyprint">PUT /account</code></p>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+<th>Header Key</th>
+<th>Query Parameter</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>Password</strong></td>
+<td>The user&rsquo;s new password, hashed with SHA-1 algorithm.</td>
+<td><code class="prettyprint">x-droplr-password</code></td>
+<td><code class="prettyprint">password</code></td>
+</tr>
+<tr>
+<td><strong>Theme</strong></td>
+<td>The theme to use on Droplr&rsquo;s website. This is a free-form string but typical values are &#39;default&rsquo;, &#39;light&rsquo; and &#39;dark&rsquo;. If the value is not recognized, the default theme will be used. Your application can also rely on this value to change its appearance.</td>
+<td><code class="prettyprint">x-droplr-theme</code></td>
+<td><code class="prettyprint">theme</code></td>
+</tr>
+<tr>
+<td><strong>Use custom domain</strong></td>
+<td>A flag that indicates what type of domain should be used (if <strong>Custom domain</strong> property is set).</td>
+<td><code class="prettyprint">x-droplr-domaintype</code></td>
+<td><code class="prettyprint">domainType</code></td>
+</tr>
+<tr>
+<td><strong>Custom domain</strong></td>
+<td>A custom domain to use when returning shortlinks for drops, if the <strong>Use custom domain</strong> flag is set.</td>
+<td><code class="prettyprint">x-droplr-domain</code></td>
+<td><code class="prettyprint">domain</code></td>
+</tr>
+<tr>
+<td><strong>Use root redirect</strong></td>
+<td>A flag that indicates whether root redirects should be used when hitting the custom domain without a drop code. This property only makes sense if both <strong>Custom domain</strong> and <strong>Root redirect</strong> properties are set.</td>
+<td><code class="prettyprint">x-droplr-userootredirect</code></td>
+<td><code class="prettyprint">useRootRedirect</code></td>
+</tr>
+<tr>
+<td><strong>Root redirect</strong></td>
+<td>Where to redirect HTTP requests to the custom domain (<strong>Custom domain</strong> property).</td>
+<td><code class="prettyprint">x-droplr-rootredirect</code></td>
+<td><code class="prettyprint">rootRedirect</code></td>
+</tr>
+<tr>
+<td><strong>Drop privacy</strong></td>
+<td>The privacy setting with which new drops will be created. Acceptable values are <code class="prettyprint">PUBLIC</code>, <code class="prettyprint">PRIVATE</code> and <code class="prettyprint">OBSCURE</code>. To change the privacy to <code class="prettyprint">PRIVATE</code> a Pro account is required. All other changes are allowed.</td>
+<td><code class="prettyprint">x-droplr-dropprivacy</code></td>
+<td><code class="prettyprint">dropPrivacy</code></td>
+</tr>
+</tbody></table>
+
+<h5 id="output-parameters">Output Parameters</h5>
+
+<p>All output parameters are the same as the <a href="#read-account-details">read account details</a> action.</p>
+
+<h5 id="errors">Errors</h5>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Status Code</th>
+<th>Cause</th>
+<th>Error Message</th>
+</tr>
+</thead><tbody>
+<tr>
+<td><strong>EditAccount.NoUpdateData</strong></td>
+<td>400</td>
+<td>No update data was found on request (no-op request).</td>
+<td>No update data</td>
+</tr>
+<tr>
+<td><strong>EditAccount.NoUpdateData</strong></td>
+<td>400</td>
+<td>No update data was found on request (no-op request).</td>
+<td>No update data</td>
+</tr>
+<tr>
+<td><strong>EditAccount.ProRequired</strong></td>
+<td>403</td>
+<td>The operation attempted to edit one or more fields for which a Pro subscription was required.</td>
+<td>A Pro subscription is required to edit field <code class="prettyprint">%FIELD%</code></td>
+</tr>
+<tr>
+<td><strong>EditAccount.ProRequiredEnableDomain</strong></td>
+<td>403</td>
+<td>The operation attempted to edit custom domain usage with a non-Pro user.</td>
+<td>A Pro subscription is required to enable custom domain usage</td>
+</tr>
+<tr>
+<td><strong>EditAccount.ProRequiredEnableRootRedirect</strong></td>
+<td>403</td>
+<td>The operation attempted to edit root redirect usage with a non-Pro user.</td>
+<td>A Pro subscription is required to enable root redirect usage</td>
+</tr>
+<tr>
+<td><strong>EditAccount.InvalidDomain</strong></td>
+<td>400</td>
+<td>The domain specified for the custom domain field is not valid (e.g. includes <code class="prettyprint">http(s)://</code> or other invalid characters).</td>
+<td>Domain is invalid</td>
+</tr>
+<tr>
+<td><strong>EditAccount.InvalidRootRedirect</strong></td>
+<td>400</td>
+<td>The input password parameter is not a SHA-1 hash.</td>
+<td>Password must be a SHA1 hash of the user input</td>
+</tr>
+<tr>
+<td><strong>EditAccount.InvalidPassword</strong></td>
+<td>400</td>
+<td>The root redirect specified is not a valid URL.</td>
+<td>Root redirect is invalid</td>
+</tr>
+<tr>
+<td><strong>EditAccount.Deleted</strong></td>
+<td>400</td>
+<td>The account has either been locked or deleted.</td>
+<td>Account has been deleted</td>
+</tr>
+</tbody></table>
+
+<h5 id="notes">Notes</h5>
+
+<ul>
+<li>Only Pro accounts can change their custom domain, root redirect and privacy to <code class="prettyprint">PUBLIC</code>. Regular accounts can change privacy option, as long as target privacy option is <code class="prettyprint">PUBLIC</code> or <code class="prettyprint">OBSCURE</code>.</li>
+<li>The <strong>domain</strong> input parameter must <strong>not</strong> contain the scheme information, i.e. to use the custom domain <code class="prettyprint">http://droplr.biasedbit.com</code>, the app must only provide the string <code class="prettyprint">droplr.biasedbit.com</code>.</li>
+</ul>
 
       </div>
       <div class="dark-box">

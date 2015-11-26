@@ -412,7 +412,7 @@ under the License.
 /* line 70, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4, body {
   font-family: "Helvetica Neue", Helvetica, Arial, "Microsoft Yahei","微软雅黑", STXihei, "华文细黑", sans-serif;
-  font-size: 13px; }
+  font-size: 100%; }
 
 /* line 75, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
 .content h1, .content h2, .content h3, .content h4 {
@@ -421,10 +421,24 @@ under the License.
 /* line 80, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
 .content pre, .content code {
   font-family: Consolas, Menlo, Monaco, "Lucida Console", "Liberation Mono", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Courier New", monospace, serif;
-  font-size: 12px;
+  font-size: 0.9em;
   line-height: 1.5; }
 
+/* line 96, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
+h5, h6 {
+  font-size: 1.2em;
+  font-weight: bold;
+  text-transform: uppercase; }
+
 /* line 102, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
+div.logo {
+  background: url("../images/logo.png") center no-repeat;
+  background-size: contain;
+  width: 200px;
+  height: 64px;
+  margin: 1em auto; }
+
+/* line 115, /Users/nickbernard/code/droplr/docs/source/stylesheets/_variables.scss */
 .content pre, .content code {
   word-break: break-all;
   /* Non standard for webkit */
