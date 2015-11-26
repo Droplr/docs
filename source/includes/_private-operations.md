@@ -2,7 +2,7 @@
 
 ## Session-based Authentication
 
-Droplr's API server notion of session is a bit different from what the name may imply. The basis of the authentication system is the email/password based authentication. However, this system is not adequate for the anonymous drag & drop upload feature presented by the Droplr's web site.
+Droplr's API server notion of session is a bit different from what the name may imply. The basis of the authentication system is the email/password based authentication. However, this system is not adequate for the anonymous drag and drop upload feature presented by Droplr's web app.
 
 Droplr's API had, therefore, to support some kind of anonymous authentication mechanism that worked pretty much the same way as an email/password authentication system, except accounts could be created on-the-fly without registration info.
 
@@ -118,11 +118,11 @@ request({
 }
 ```
 
-* **Description:** Create an account
-* **URI:** `/account`
-* **Method:** `POST`
+Create an account
 
 ##### Input Parameters
+
+`POST /account`
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -139,9 +139,7 @@ request({
 
 ##### Error Responses
 
-##### Response if email or password are missing
-
-`400 Bad Request`
+###### 400 (Bad Request): Missing Email or Password
 
 Header Key | Header Value |
 ---------- | ------------ |
@@ -150,9 +148,8 @@ Header Key | Header Value |
 `x-droplr-errorcode` | `CreateAccount.InvalidEmail`
 `x-droplr-errordetails` | `Email is not valid`
 
-##### Response if the email is not valid
 
-`400 Bad Request`
+###### 400 (Bad Request): Invalid Email
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -161,9 +158,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidEmail`
 `x-droplr-errordetails` | `Email is not valid`
 
-##### Response if the email is already taken
 
-`409 Conflict`
+###### 409 (Conflict): Email Already Taken
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -172,9 +168,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.EmailAlreadyTaken`
 `x-droplr-errordetails` | `That email is already taken; if it's yours please contact Droplr support`
 
-##### Response if the password is not valid
 
-`400 Bad Request`
+###### 400 (Bad Request): Invalid Password
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -183,9 +178,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidPassword`
 `x-droplr-errordetails` | `Password must be a SHA1 hash of the user input`
 
-##### Response if the username is not valid
 
-`400 Bad Request`
+###### 400 (Bad Request): Invalid Username
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -194,9 +188,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidUsername`
 `x-droplr-errordetails` | `Invalid Username`
 
-##### Response if the username is already taken
 
-`409 Conflict`
+###### 409 (Conflict): Username Already Taken
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -205,9 +198,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.UsernameAlreadyTaken`
 `x-droplr-errordetails` | `That username is already taken`
 
-##### Response if domain is already taken
 
-`409 Conflict`
+###### 409 (Conflict): Domain Already Taken
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -284,12 +276,11 @@ request({
 }
 ```
 
-* **Description:** Create team member account
-* **URI:** `/teams/:team_id/account`
-* **Method:** `POST`
-
+Create team member account
 
 ##### Input Parameters
+
+`POST /teams/:team_id/account`
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -301,9 +292,7 @@ request({
 
 ##### Error Responses
 
-##### Response if email or password are missing
-
-`400 Bad Request`
+###### 400 (Bad Request): Missing Email or Password
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -312,9 +301,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.MissingEmailOrPassword`
 `x-droplr-errordetails` | `Missing email and/or password`
 
-##### Response if the email is not valid
 
-`400 Bad Request`
+###### 400 (Bad Request): Invalid Email
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -323,9 +311,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidEmail`
 `x-droplr-errordetails` | `Email is not valid`
 
-##### Response if the email is already taken
 
-`409 Conflict`
+###### 409 (Conflict): Email Already Taken
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -334,9 +321,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.EmailAlreadyTaken`
 `x-droplr-errordetails` | `That email is already taken; if it's yours please contact Droplr support`
 
-##### Response if the password is not valid
 
-`400 Bad Request`
+###### 400 (Bad Request): Password Invalid
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -345,10 +331,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidPassword`
 `x-droplr-errordetails` | `Password must be a SHA1 hash of the user input`
 
-##### Response if the username is not valid
 
-
-`400 Bad Request`
+###### 400 (Bad Request): Username Invalid
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -357,9 +341,8 @@ Header Key | Header Value
 `x-droplr-errorcode` | `CreateAccount.InvalidUsername`
 `x-droplr-errordetails` | `Invalid Username`
 
-##### Response if the username is already taken
 
-`409 Conflict`
+###### 409 (Conflict): Username Already Taken
 
 Header Key | Header Value
 ---------- | ------------ |
@@ -374,7 +357,7 @@ Header Key | Header Value
 * The authentication used for this action must be Anonymous User authentication. Only first party applications are allowed to create accounts.
 
 
-### Update a Customer ID
+### Update Customer ID
 
 > Example Request
 
@@ -401,11 +384,11 @@ request({
 });
 ```
 
-* **Description:** Create a customer_id
-* **URI:** `/account/customer_id`
-* **Method:** `PUT`
+Create a customer_id
 
 ##### Input Parameters
+
+`PUT /account/customer_id`
 
 | Name | Type | Description |
 | :--- | :--- | :---------- |
@@ -419,11 +402,11 @@ request({
 
 ### Convert Session to Account
 
-* **Description:** Create session to account
-* **URI:** `/sessions/convert`
-* **Method:** `POST`
+Create session to account
 
 ##### Input Parameters
+
+`POST /sessions/convert`
 
 Same input parameters and format as [create account](#create-account) action.
 
