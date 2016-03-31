@@ -127,7 +127,7 @@ Create an account
 | Name | Type | Description |
 | :--- | :--- | :---------- |
 | email| string | **Required** The email of the account to be created |
-| password | string | **Required** The account password, hashed with MD5 algorythm |
+| password | string | **Required** The account password, hashed with SHA1 algorythm |
 | domain | string | The domain to be used for shortlinks |
 | domainType | string | What should be used in shortlinks DEFAULT, DOMAIN, SUB_DOMAIN|
 | subdomain | string | The subdomain to be used shortlinks (e.g. subdomain.d.pr/xkdg). |
