@@ -136,6 +136,7 @@ Create an account
 | username | string | The user's username |
 | dropPrivacy | string | PUBLIC or PRIVATE |
 | theme | string | light or dark |
+| storageProvider | string | AMAZON or AZURE |
 
 ##### Error Responses
 
