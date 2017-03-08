@@ -7,6 +7,7 @@ toc_footers:
 
 includes:
   - public-operations
+  - private-operations
 
 search: true
 ---
